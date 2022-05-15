@@ -1,0 +1,6 @@
+C:\Users\HP\Desktop\PSW\PSW\PSW\obj\Debug\netcoreapp6.0\PSW.csproj.AssemblyReference.cache
+C:\Users\HP\Desktop\PSW\PSW\PSW\obj\Debug\netcoreapp6.0\PSW.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HP\Desktop\PSW\PSW\PSW\obj\Debug\netcoreapp6.0\PSW.AssemblyInfoInputs.cache
+C:\Users\HP\Desktop\PSW\PSW\PSW\obj\Debug\netcoreapp6.0\PSW.AssemblyInfo.cs
+C:\Users\HP\Desktop\PSW\PSW\PSW\obj\Debug\netcoreapp6.0\PSW.csproj.CoreCompileInputs.cache
+C:\Users\HP\Desktop\PSW\PSW\PSW\obj\Debug\netcoreapp6.0\PSW.MvcApplicationPartsAssemblyInfo.cache
