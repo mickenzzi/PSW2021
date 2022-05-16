@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PSW.DTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,10 +22,19 @@ namespace PSW.Model
         public string Username { get; set; }
         [Column("password")]
         public string Password { get; set; }
-
+      
         public User()
         {
             Id = "user_" + Guid.NewGuid();
+        }
+
+        public User(UserDTO userDTO)
+        {
+            Id = "user_" + Guid.NewGuid();
+            FirstName = userDTO.FirstName;
+            LastName = userDTO.LastName;
+            Username = userDTO.Username;
+            Password = userDTO.Password;
         }
 
     }

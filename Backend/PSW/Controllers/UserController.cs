@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using PSW.Service;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using PSW.DTO;
 using PSW.Model;
+using PSW.Service;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace PSW.Controllers
 {
@@ -29,6 +26,53 @@ namespace PSW.Controllers
         public IActionResult GetAllUsers()
         {
             return Ok(_userService.GetAllUsers());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetUserById([FromRoute] string id)
+        {
+            User user = _userService.GetUserById(id);
+            if (user == null)
+                return BadRequest(new { message = "Invalid id"});
+            return Ok(user);
+        }
+
+        [HttpPost]
+        public IActionResult CreateUser([FromBody] UserDTO userDTO)
+        {
+
+            User user = new User(userDTO);
+            if (_userService.CreateUser(user))
+            {
+                return Ok(new { message = "Success" });
+            }
+
+            return BadRequest(new { message = "Username already exist" });
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteUser([FromQuery] string id)
+        {
+            User user = _userService.GetUserById(id);
+
+            if (user != null)
+            {
+                _userService.DeleteUser(user);
+                return Ok(new { message = "Success" });
+            }
+
+            return BadRequest(new { message = "Invalid id" });
+        }
+
+        [HttpPut]
+        public IActionResult UpdateUser([FromBody] UserDTO userDTO)
+        {
+            if(_userService.UpdateUser(userDTO))
+            {
+                return Ok(new { message = "Success" });
+            }
+
+            return BadRequest(new { message = "Invalid id" });
         }
     }
 }

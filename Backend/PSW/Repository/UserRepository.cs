@@ -28,8 +28,7 @@ namespace PSW.Repository
 
         public User GetUserById(string id)
         {
-            Guid id1 = Guid.Parse(id);
-            return _dataContext.User.Find(id1);
+            return _dataContext.User.Find(id);
         }
 
         public User GetUserByUsername(string username)
@@ -39,7 +38,7 @@ namespace PSW.Repository
 
         public bool Create(User entity)
         {
-            
+
             if (_dataContext.User.Any(u => u.Username == entity.Username))
             {
                 return false;
@@ -52,7 +51,7 @@ namespace PSW.Repository
 
         public bool Update(User entity)
         {
-            var result = _dataContext.User.SingleOrDefault(u => u.Id == entity.Id);
+            User result = _dataContext.User.SingleOrDefault(u => u.Id == entity.Id);
             if (result != null)
             {
                 result = entity;

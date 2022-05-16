@@ -1,9 +1,7 @@
-﻿using PSW.Model;
+﻿using PSW.DTO;
+using PSW.Model;
 using PSW.Repository.Interface;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PSW.Service
 {
@@ -31,8 +29,17 @@ namespace PSW.Service
             return _userRepository.Create(user);
         }
 
-        public bool UpdateUser(User user)
+        public bool UpdateUser(UserDTO userDTO)
         {
+            User user = _userRepository.GetUserById(userDTO.Id);
+            if(user == null)
+            {
+                return false;
+            }
+            user.FirstName = userDTO.FirstName;
+            user.LastName = userDTO.LastName;
+            user.Username = userDTO.Username;
+            user.Password = userDTO.Password;
             return _userRepository.Update(user);
         }
 

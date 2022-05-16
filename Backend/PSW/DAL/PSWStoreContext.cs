@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PSW.Model;
-using System;
 
 namespace PSW.DAL
 {
     public class PSWStoreContext : DbContext
     {
-        public PSWStoreContext() { } 
+        public PSWStoreContext() { }
         public PSWStoreContext(DbContextOptions<PSWStoreContext> options) : base(options) { }
 
         public DbSet<User> User { get; set; }
