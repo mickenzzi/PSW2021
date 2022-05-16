@@ -91,10 +91,9 @@ namespace PSW.Controllers
 
             if (user == null)
                 return BadRequest("Please pass the valid username and password");
-            Console.WriteLine(user);
 
             var tokenString = GenerateJwtToken(data.Username);
-            return Ok(new { Token = tokenString, Message = "Success" });
+            return Ok(new { Token = tokenString, LoggedUser = user, Message = "Success" });
 
         }
 
