@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HP\\Desktop\\PSW\\PSW\\PSW\\PSW.csproj": {}
+    "C:\\Users\\HP\\Desktop\\PSW\\PSW2021\\PSW\\PSW\\PSW.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HP\\Desktop\\PSW\\PSW\\PSW\\PSW.csproj": {
+    "C:\\Users\\HP\\Desktop\\PSW\\PSW2021\\PSW\\PSW\\PSW.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HP\\Desktop\\PSW\\PSW\\PSW\\PSW.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\Desktop\\PSW\\PSW2021\\PSW\\PSW\\PSW.csproj",
         "projectName": "PSW",
-        "projectPath": "C:\\Users\\HP\\Desktop\\PSW\\PSW\\PSW\\PSW.csproj",
+        "projectPath": "C:\\Users\\HP\\Desktop\\PSW\\PSW2021\\PSW\\PSW\\PSW.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HP\\Desktop\\PSW\\PSW\\PSW\\obj\\",
+        "outputPath": "C:\\Users\\HP\\Desktop\\PSW\\PSW2021\\PSW\\PSW\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",

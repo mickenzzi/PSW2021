@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "IilKI6a/dPVCf3+aDuu8lc3/bRhN1BPt8EIcoeXI2nP+LBiVXkdNpTTHZE3imHyUkgsoFvX1idNRXuZ2Ne7BUw==",
+  "dgSpecHash": "9/HeqmPqKx1msKnsbNvV0sfE2uVV4BB/QCPi5wSwSKR9m14i8vEaHkI6k9wkKMBl3dvSJozPK6Ul/lc3YBV00Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\HP\\Desktop\\PSW\\PSW\\PSW\\PSW.csproj",
+  "projectFilePath": "C:\\Users\\HP\\Desktop\\PSW\\PSW2021\\PSW\\PSW\\PSW.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HP\\.nuget\\packages\\automapper\\11.0.1\\automapper.11.0.1.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",
