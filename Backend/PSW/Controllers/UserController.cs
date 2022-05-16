@@ -29,6 +29,7 @@ namespace PSW.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAllUsers()
         {
             return Ok(_userService.GetAllUsers());
