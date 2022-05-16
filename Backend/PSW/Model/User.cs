@@ -11,6 +11,13 @@ namespace PSW.Model
     [Table("User")]
     public class User
     {
+
+        public enum UserRole
+        {
+            Client,
+            Admin
+        }
+
         [Key]
         [Column("id")]
         public String Id { get; set; }
@@ -22,6 +29,9 @@ namespace PSW.Model
         public string Username { get; set; }
         [Column("password")]
         public string Password { get; set; }
+
+        [Column("role")]
+        public String Role { get; set; }
       
         public User()
         {

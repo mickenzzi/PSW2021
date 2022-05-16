@@ -2,6 +2,7 @@
 using PSW.Model;
 using PSW.Repository.Interface;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PSW.Service
 {
@@ -51,6 +52,12 @@ namespace PSW.Service
         public User GetUserByUsername(string username)
         {
             return _userRepository.GetUserByUsername(username);
+        }
+
+        public User GetUserByLoginCredentials(UserLoginRequestDTO userDTO)
+        {
+            User user = _userRepository.GetAll().SingleOrDefault(u => u.Username == userDTO.Username && u.Password == userDTO.Password);
+            return user;
         }
 
 

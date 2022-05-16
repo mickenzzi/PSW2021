@@ -1,5 +1,6 @@
 using FluentAssertions.Common;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -8,12 +9,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using PSW.DAL;
+using PSW.Helpers;
 using PSW.Repository;
 using PSW.Repository.Interface;
 using PSW.Service;
 using System;
+using System.Text;
+using static PSW.Helpers.JwtMiddleware;
 
 namespace PSW
 {
@@ -52,10 +57,34 @@ namespace PSW
             
             services.AddAutoMapper(typeof(Startup));
 
+            //Authentication
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])) //Configuration["JwtToken:SecretKey"]
+                };
+            });
+
+            // AutoMapper
+            services.AddAutoMapper(typeof(Startup));
+
             //Dependency injection
             services.AddScoped<IUserRepository, UserRepository>();
             //Services
             services.AddTransient<UserService>();
+            services.AddTransient<JwtMiddleware>();
 
         }
 
@@ -71,9 +100,12 @@ namespace PSW
             }
 
             app.UseRouting();
-           
+
+            app.UseAuthorization();
 
             var scopeeee = app.ApplicationServices.CreateScope();
+
+            app.UseMiddleware<JWTMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
