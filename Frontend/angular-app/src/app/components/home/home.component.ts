@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoginRequest } from 'src/app/model/login-request';
 import { TokenStorageService } from 'src/app/service/token-storage.service';
 import { UserService } from 'src/app/service/user.service';
@@ -18,7 +19,7 @@ export class HomeComponent implements OnInit {
   isLoginFailed = false;
   errorMessage = '';
 
-  constructor(private userService: UserService, private tokenStorage: TokenStorageService) { }
+  constructor(private router: Router, private userService: UserService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -39,16 +40,17 @@ export class HomeComponent implements OnInit {
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
+        this.errorMessage = ""
+        this.router.navigate(['/client'])
       },
       err => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = "Invalid username or password.";
         this.isLoginFailed = true;
       }
     );
   }
-
   goToRegistration() {
-
+    this.router.navigate(['/registration'])
   }
 
 }

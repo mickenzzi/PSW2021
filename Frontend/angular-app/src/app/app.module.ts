@@ -7,11 +7,15 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { authInterceptorProviders } from './helpers/auth.interceptor';
 import { HttpClientModule } from '@angular/common/http';
+import { RegistrationComponent } from './components/registration/registration.component';
+import { ClientComponent } from './components/client/client.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    RegistrationComponent,
+    ClientComponent
   ],
   imports: [
     BrowserModule,

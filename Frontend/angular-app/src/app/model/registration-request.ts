@@ -1,9 +1,6 @@
-export class User {
-    id?: String;
+export class RegistrationRequest {
     firstName?: String;
     lastName?: String;
     username?: String;
     password?: String;
-    password1?: String;
-    role?: String;
 }
