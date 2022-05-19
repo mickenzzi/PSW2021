@@ -1,10 +1,6 @@
-using FluentAssertions.Common;
-using Grpc.Core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -82,8 +78,10 @@ namespace PSW
 
             //Dependency injection
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
             //Services
             services.AddTransient<UserService>();
+            services.AddTransient<DoctorService>();
             services.AddTransient<JwtMiddleware>();
 
         }

@@ -1,7 +1,6 @@
 ﻿using PSW.DAL;
 using PSW.Model;
 using PSW.Repository.Interface;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,53 +8,53 @@ namespace PSW.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly PSWStoreContext _dataContext;
+        private readonly PSWStoreContext db;
 
-        public UserRepository(PSWStoreContext dataContext)
+        public UserRepository(PSWStoreContext _db)
         {
-            _dataContext = dataContext;
+            db = _db;
         }
         public void Delete(User entity)
         {
-            _dataContext.User.Remove(entity);
-            _dataContext.SaveChanges();
+            db.User.Remove(entity);
+            db.SaveChanges();
         }
 
         public List<User> GetAll()
         {
-            return _dataContext.User.ToList();
+            return db.User.ToList();
         }
 
         public User GetUserById(string id)
         {
-            return _dataContext.User.Find(id);
+            return db.User.Find(id);
         }
 
         public User GetUserByUsername(string username)
         {
-            return _dataContext.User.SingleOrDefault(u => u.Username == username);
+            return db.User.SingleOrDefault(u => u.Username == username);
         }
 
         public bool Create(User entity)
         {
 
-            if (_dataContext.User.Any(u => u.Username == entity.Username))
+            if (db.User.Any(u => u.Username == entity.Username))
             {
                 return false;
             }
 
-            _dataContext.User.Add(entity);
-            _dataContext.SaveChanges();
+            db.User.Add(entity);
+            db.SaveChanges();
             return true;
         }
 
         public bool Update(User entity)
         {
-            User result = _dataContext.User.SingleOrDefault(u => u.Id == entity.Id);
+            User result = db.User.SingleOrDefault(u => u.Id == entity.Id);
             if (result != null)
             {
                 result = entity;
-                _dataContext.SaveChanges();
+                db.SaveChanges();
                 return true;
             }
             return false;
