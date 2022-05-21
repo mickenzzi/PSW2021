@@ -11,6 +11,8 @@ namespace PSW.DAL
         public DbSet<User> User { get; set; }
         public DbSet<Doctor> Doctor { get; set; }
 
+        public DbSet<Term> Term { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connection = "Server=localhost;Port=5432;Database=psw;User Id=postgres;Password=milorad;";
