@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PSW.DTO;
 using PSW.Model;
 using PSW.Service;
+using System;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace PSW.Controllers
@@ -28,6 +29,16 @@ namespace PSW.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAvailableTerms([FromBody] TermDTO termDTO)
         {
+            DateTime start = new DateTime(termDTO.StartDate.Year,termDTO.StartDate.Month,termDTO.StartDate.Day,8,0,0);
+            DateTime end = new DateTime(termDTO.StartDate.Year, termDTO.StartDate.Month, termDTO.StartDate.Day, 19, 0, 0);
+            if (termDTO.StartDate < start || termDTO.StartDate > end)
+            {
+                return BadRequest(new { message = "Worktime is 08:00-20:00" });
+            }
+            else if(termDTO.StartDate.Minute != 0)
+            {
+                return BadRequest(new { message = "You can reserve term only at full hours." });
+            }
             return Ok(_termService.ScheduleTerm(termDTO));
         }
     }

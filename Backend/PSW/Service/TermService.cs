@@ -60,8 +60,23 @@ namespace PSW.Service
 
         private List<Term> GetAllTermsByDoctorPriority(TermDTO termDTO)
         {
-            List<Term> terms = new List<Term>();
-            return terms;
+            DateTime start = termDTO.StartDate.AddDays(-10);
+            DateTime end = termDTO.StartDate.AddDays(10);
+
+            List<Term> terms = _termRepository.GetAll();
+            List<Term> usedTerms = new List<Term>();
+            foreach(Term t in terms)
+            {
+                if(DateTime.Parse(t.DateTimeTerm) >= termDTO.StartDate && DateTime.Parse(t.DateTimeTerm) <= termDTO.EndDate && t.DoctorId == termDTO.DoctorId )
+                {
+                    usedTerms.Add(t);
+                }
+            }
+
+            List<Term> availableTermsAfter = FindFreeTermsAfter(termDTO, usedTerms);
+            List<Term> availableTermsBefore = FindFreeTermsBefore(termDTO, usedTerms);
+            return availableTermsAfter.Concat(availableTermsBefore).ToList();
+        
         }
 
         private List<Term> GettAllTermsByDatePriority(TermDTO termDTO)
@@ -114,6 +129,76 @@ namespace PSW.Service
                 }
             }
             return matchingDoctors;
+        }
+
+        private List<Term> FindFreeTermsAfter(TermDTO termDTO, List<Term> usedTerms)
+        {
+            List<Term> availableTermsAfter = new List<Term>();
+            DateTime end = termDTO.StartDate.AddDays(10);
+            for (var day = termDTO.StartDate.Date; day.Date <= end.Date; day = day.AddDays(1))
+            {
+                for (int i = 8; i < 20; i++)
+                {
+                    Term term = new Term();
+                    DateTime dateTimeTerm = new DateTime(day.Year, day.Month, day.Day, i, 0, 0);
+                    term.DateTimeTerm = dateTimeTerm.ToString();
+                    term.DoctorId = termDTO.DoctorId;
+                    term.UserId = termDTO.UserId;
+                    availableTermsAfter.Add(term);
+                }
+            }
+
+            List<Term> usedAvailableTermsAfter = new List<Term>();
+            foreach (Term t in usedTerms)
+            {
+                foreach (Term t1 in availableTermsAfter)
+                {
+                    if (DateTime.Parse(t.DateTimeTerm) == DateTime.Parse(t1.DateTimeTerm))
+                    {
+                        usedAvailableTermsAfter.Add(t1);
+                    }
+                }
+            }
+            foreach (Term t in usedAvailableTermsAfter)
+            {
+                availableTermsAfter.Remove(t);
+            }
+            return  availableTermsAfter.OrderBy(o => DateTime.Parse(o.DateTimeTerm)).Take(5).ToList();
+        }
+
+        private List<Term> FindFreeTermsBefore(TermDTO termDTO, List<Term> usedTerms)
+        {
+            List<Term> availableTermsBefore = new List<Term>();
+            DateTime start = termDTO.StartDate.AddDays(-10);
+            for (var day = termDTO.StartDate.Date.AddDays(-1); day.Date >= start.Date; day = day.AddDays(-1))
+            {
+                for (int i = 8; i < 20; i++)
+                {
+                    Term term = new Term();
+                    DateTime dateTimeTerm = new DateTime(day.Year, day.Month, day.Day, i, 0, 0);
+                    term.DateTimeTerm = dateTimeTerm.ToString();
+                    term.DoctorId = termDTO.DoctorId;
+                    term.UserId = termDTO.UserId;
+                    availableTermsBefore.Add(term);
+                }
+            }
+
+            List<Term> usedAvailableTermsBefore = new List<Term>();
+            foreach (Term t in usedTerms)
+            {
+                foreach (Term t1 in availableTermsBefore)
+                {
+                    if (DateTime.Parse(t.DateTimeTerm) == DateTime.Parse(t1.DateTimeTerm))
+                    {
+                        usedAvailableTermsBefore.Add(t1);
+                    }
+                }
+            }
+            foreach (Term t in usedAvailableTermsBefore)
+            {
+                availableTermsBefore.Remove(t);
+            }
+            return availableTermsBefore.OrderByDescending(o => DateTime.Parse(o.DateTimeTerm)).Take(5).ToList();
         }
     }
 }
