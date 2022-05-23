@@ -24,18 +24,18 @@ export class RegistrationComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(this.user.firstName?.length == 0 || this.user.firstName == undefined || this.user.lastName == undefined || this.user.lastName?.length == 0 ||
-       this.user.username?.length == 0 || this.user.username == undefined || this.user.password1 == undefined ||
-      this.user.password1?.length == 0 || this.user.password?.length == 0 || this.user.password == undefined) {
+    if(this.user.FirstName?.length == 0 || this.user.FirstName == undefined || this.user.LastName == undefined || this.user.LastName?.length == 0 ||
+       this.user.Username?.length == 0 || this.user.Username == undefined || this.user.Password1 == undefined ||
+      this.user.Password1?.length == 0 || this.user.Password?.length == 0 || this.user.Password == undefined) {
         this.passwordCheck = true;
         this.inputError = "Invalid data. Some fields are empty."
       }
     else {
-      if(this.user.password.length < 5){
+      if(this.user.Password.length < 5){
         this.passwordCheck = true;
         this.inputError = "Invalid data. Password should have minimum 5 characters."
       }
-      else if(this.user.password1 != this.user.password){
+      else if(this.user.Password1 != this.user.Password){
         this.passwordCheck = true;
         this.inputError = "Passwords don't match."
       }
@@ -43,10 +43,10 @@ export class RegistrationComponent implements OnInit {
         this.passwordCheck = false;
         this.inputError = ""
         const data = {
-          firstName: this.user.firstName,
-          lastName: this.user.lastName,
-          username: this.user.username,
-          password: this.user.password
+          firstName: this.user.FirstName,
+          lastName: this.user.LastName,
+          username: this.user.Username,
+          password: this.user.Password
         }
 
         this.userService.registration(data).subscribe(() => {

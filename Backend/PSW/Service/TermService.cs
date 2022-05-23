@@ -23,6 +23,16 @@ namespace PSW.Service
             return _termRepository.GetAll();
         }
 
+        public bool ReserveTerm(Term term)
+        {
+            return _termRepository.Create(term);
+        }
+
+        public void RejectTerm(Term term)
+        {
+            _termRepository.Delete(term);
+        }
+
         public List<Term> ScheduleTerm(TermDTO termDTO)
         {
             bool termExist = CheckUsedTerm(termDTO.StartDate, termDTO.EndDate, termDTO.DoctorId);

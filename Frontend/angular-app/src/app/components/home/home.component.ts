@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private userService: UserService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
+    this.tokenStorage.signOut();
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
     }

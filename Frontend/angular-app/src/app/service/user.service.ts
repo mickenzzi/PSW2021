@@ -4,9 +4,6 @@ import { Observable } from 'rxjs';
 import { LoginRequest } from '../model/login-request'
 import { RegistrationRequest } from '../model/registration-request';
 
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 @Injectable({
   providedIn: 'root'

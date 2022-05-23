@@ -19,6 +19,35 @@ namespace PSW.Service
             return _doctorRepository.GetAll();
         }
 
+        public List<Doctor> GetAllSpecialist()
+        {
+            List<Doctor> doctors = _doctorRepository.GetAll();
+            List<Doctor> specialsit = new List<Doctor>();
+            foreach(Doctor d in doctors)
+            {
+                if (!d.Specialization.ToLower().Equals("GeneralPractitioner".ToLower()))
+                {
+                    specialsit.Add(d);
+                }
+            }
+
+            return specialsit;
+        }
+        public List<Doctor> GetAllNonSpecialist()
+        {
+            List<Doctor> doctors = _doctorRepository.GetAll();
+            List<Doctor> nonSpecialsit = new List<Doctor>();
+            foreach (Doctor d in doctors)
+            {
+                if (d.Specialization.ToLower().Equals("GeneralPractitioner".ToLower()))
+                {
+                    nonSpecialsit.Add(d);
+                }
+            }
+
+            return nonSpecialsit;
+        }
+
         public Doctor GetDoctorById(string id)
         {
             return _doctorRepository.GetDoctorById(id);

@@ -5,11 +5,11 @@
 				<h2 style="margin-left:90px;">Registration</h2>
 			</header>
 			<form class="login-form" (ngSubmit)="onSubmit()">
-                <input type="text" class="login-input" [(ngModel)]="user.firstName" placeholder="Firstname" [ngModelOptions]="{standalone: true}" required autofocus/>
-                <input type="text" class="login-input" [(ngModel)]="user.lastName" placeholder="Lastname" [ngModelOptions]="{standalone: true}" required autofocus/>
-				<input type="text" class="login-input" [(ngModel)]="user.username" placeholder="Username" [ngModelOptions]="{standalone: true}" required autofocus/>
-				<input type="password" class="login-input" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}" placeholder="Password" required autofocus/>
-                <input type="password" class="login-input" [(ngModel)]="user.password1" [ngModelOptions]="{standalone: true}" placeholder="Re-enter password" required autofocus/>
+                <input type="text" class="login-input" [(ngModel)]="user.FirstName" placeholder="Firstname" [ngModelOptions]="{standalone: true}" required autofocus/>
+                <input type="text" class="login-input" [(ngModel)]="user.LastName" placeholder="Lastname" [ngModelOptions]="{standalone: true}" required autofocus/>
+				<input type="text" class="login-input" [(ngModel)]="user.Username" placeholder="Username" [ngModelOptions]="{standalone: true}" required autofocus/>
+				<input type="password" class="login-input" [(ngModel)]="user.Password" [ngModelOptions]="{standalone: true}" placeholder="Password" required autofocus/>
+                <input type="password" class="login-input" [(ngModel)]="user.Password1" [ngModelOptions]="{standalone: true}" placeholder="Re-enter password" required autofocus/>
                 <label style="color:red" *ngIf="passwordCheck">{{inputError}}</label><br><br>
                 <button class="login-button">Sign up</button>
 			</form>

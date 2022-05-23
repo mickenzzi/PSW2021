@@ -29,6 +29,20 @@ namespace PSW.Controllers
             return Ok(_doctorService.GetAllDoctors());
         }
 
+        [HttpGet("specialist")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetAllSpecialist()
+        {
+            return Ok(_doctorService.GetAllSpecialist());
+        }
+
+        [HttpGet("nonspecialist")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetAllNonSpecialist()
+        {
+            return Ok(_doctorService.GetAllNonSpecialist());
+        }
+
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetDoctorById([FromRoute] string id)
