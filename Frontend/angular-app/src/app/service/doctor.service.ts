@@ -18,4 +18,12 @@ export class DoctorService {
     return this.http.get(`${this.doctorUrl}/nonspecialist`)
   }
 
+  public getAllDoctors() : Observable<any> {
+    return this.http.get(`${this.doctorUrl}`)
+  }
+
+  public getDoctor(id: string) : Observable<any> {
+    return this.http.get(`${this.doctorUrl}/${id}`)
+  }
+
 }

@@ -11,11 +11,14 @@ namespace PSW.Service
     {
         private readonly ITermRepository _termRepository;
         private readonly IDoctorRepository _doctorRepository;
+        private readonly IUserRepository _userRepository;
 
-        public TermService(ITermRepository termRepository, IDoctorRepository doctorRepository)
+        public TermService(ITermRepository termRepository, IDoctorRepository doctorRepository, IUserRepository userRepository)
         {
             _termRepository = termRepository;
             _doctorRepository = doctorRepository;
+            _userRepository = userRepository;
+
         }
 
         public List<Term> GetAllTerms()
@@ -33,7 +36,7 @@ namespace PSW.Service
             _termRepository.Delete(term);
         }
 
-        public List<Term> ScheduleTerm(TermDTO termDTO)
+        public List<TermResponse> ScheduleTerm(TermDTO termDTO)
         {
             bool termExist = CheckUsedTerm(termDTO.StartDate, termDTO.EndDate, termDTO.DoctorId);
             List<Term> availableTerms = new List<Term>();
@@ -52,19 +55,34 @@ namespace PSW.Service
                 availableTerms.Add(term);
             }
 
+            List<TermResponse> terms = new List<TermResponse>();
+            foreach(Term t in availableTerms)
+            {
+                TermResponse termResponse = new TermResponse();
+                termResponse.DateTimeTerm = t.DateTimeTerm;
+                User user = _userRepository.GetUserById(t.UserId);
+                Doctor doctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                termResponse.Id = t.Id;
+                termResponse.TermUser = user;
+                termResponse.TermDoctor = doctor;
+                terms.Add(termResponse);
 
-            return availableTerms;
+            }
+
+
+            return terms;
         }
 
         private bool CheckUsedTerm(DateTime startDate, DateTime endDate, string doctorId)
         {
             List<Term> terms = _termRepository.GetAll();
-            foreach(Term t in terms){
-                if (t.DoctorId == doctorId && DateTime.Parse(t.DateTimeTerm) <= endDate && DateTime.Parse(t.DateTimeTerm) >= startDate)
+                foreach (Term t in terms)
                 {
-                    return true;
+                    if (t.DoctorId == doctorId && DateTime.Parse(t.DateTimeTerm) <= endDate && DateTime.Parse(t.DateTimeTerm) >= startDate)
+                    {
+                        return true;
+                    }
                 }
-            }
             return false;
         }
 

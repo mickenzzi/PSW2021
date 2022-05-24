@@ -29,7 +29,6 @@ namespace PSW.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAvailableTerms([FromBody] TermDTO termDTO)
         {
-            Console.Out.WriteLine(Request.Headers.Values);
             DateTime start = new DateTime(termDTO.StartDate.Year,termDTO.StartDate.Month,termDTO.StartDate.Day,8,0,0);
             DateTime end = new DateTime(termDTO.StartDate.Year, termDTO.StartDate.Month, termDTO.StartDate.Day, 19, 0, 0);
             if (termDTO.StartDate < start || termDTO.StartDate > end)
@@ -47,6 +46,7 @@ namespace PSW.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult ReserveTerm([FromBody] Term term)
         {
+            Console.Out.WriteLine(term.DateTimeTerm);
             return Ok(_termService.ReserveTerm(term));
         }
 
