@@ -23,7 +23,7 @@ export class ClientComponent implements OnInit {
   nonSpecialist: Doctor[];
   specialist: Doctor[];
   doctors: Doctor[];
-  terms: TermResponse[];
+  terms: TermResponse[] = [];
   selectedDoctor: Doctor = new Doctor();
   selectedTerm: Term = new Term();
   doctorPriority: boolean = false;
@@ -56,7 +56,7 @@ export class ClientComponent implements OnInit {
   reserveTerm(){
     if(this.selectedDoctor.Id === null || this.selectedDoctor.Id === undefined){
       this.isFailed = true;
-      this.errorMessage = "Chose a doctor."
+      this.errorMessage = "Choose a doctor."
     }
     else if(this.termRequest.startDate === undefined || this.termRequest.endDate === undefined ||
       this.termRequest.startDate === null || this.termRequest.endDate === null ) {
@@ -70,6 +70,10 @@ export class ClientComponent implements OnInit {
         this.termRequest.userId = this.currentUser.Id;
         this.termService.schedule(this.termRequest).subscribe(data => {
           this.terms = data;
+          if(this.terms.length === 0){
+            this.isFailed = true;
+            this.errorMessage = "There is no free terms."
+          }
         }, (error: HttpErrorResponse) => {
             this.flag1 = true;
             this.flag2 = false;
@@ -95,10 +99,12 @@ export class ClientComponent implements OnInit {
   showTermReserveForm() {
     this.flag1 = true;
     this.flag2 = false;
+    this.isFailed = false;
   }
 
   cancel() {
     this.flag1 = false;
+    this.isFailed = false;
     this.termRequest = new TermRequest();
     this.selectedDoctor = new Doctor();
   }
@@ -137,7 +143,7 @@ export class ClientComponent implements OnInit {
   createTerm() {
     if(this.selectedTerm.Id === null || this.selectedTerm.Id === undefined){
       this.isFailed = true;
-      this.errorMessage = "Chose a term."
+      this.errorMessage = "Choose a term."
     }
     else{
       this.termService.reserve(this.selectedTerm).subscribe(data => {
@@ -149,6 +155,7 @@ export class ClientComponent implements OnInit {
   cancelReservation() {
     this.flag2 = false;
     this.flag1 = true;
+    this.isFailed = false;
     this.selectedTerm = new Term();
   }
 }

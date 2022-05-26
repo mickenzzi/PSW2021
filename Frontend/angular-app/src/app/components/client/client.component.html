@@ -13,7 +13,7 @@
             <label class="input-text" style="margin-left: 10px;">End date:</label><br>
             <input type="text" [(ngModel)]="termRequest.endDate" placeholder="Date format: YYYY-DD-MM hh-mm-ss AM/PM" style="width:300px; margin-left: 10px;"><br><br>
 
-            <table class="table" style="margin-left: 10px;">
+            <table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
                 <tr class="table-header">
                   <th class="header__item">Doctor</th>
                   <th class="header__item">Specialization</th>
@@ -40,7 +40,7 @@
 
             <div *ngIf="flag2" style="margin-left: 20px; margin-top: 20px; background-color: aliceblue; width: 330px; height: 540px;">
               <br>
-              <table class="table" style="margin-left: 10px;">
+              <table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
                   <tr class="table-header">
                     <th class="header__item">Date</th>
                     <th class="header__item">Doctor</th>

@@ -17,7 +17,6 @@ export class TermService {
   }
 
   public reserve(termRequest: Term) : Observable<any> {
-    console.log(termRequest);
     return this.http.post(`${this.termsUrl}/reserve`, termRequest)
   }
 }
