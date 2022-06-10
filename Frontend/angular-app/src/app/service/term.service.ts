@@ -31,4 +31,11 @@ export class TermService {
   public getAllDoctorTerms(id: string) : Observable<any>{
     return this.http.get(`${this.termsUrl}/doctor/${id}`)
   }
+
+  public getAllPatientCompletedTerms(id: string) : Observable<any>{
+    return this.http.get(`${this.termsUrl}/completed/${id}`)
+  }
+  public getAllPatientFutureTerms(id: string) : Observable<any>{
+    return this.http.get(`${this.termsUrl}/future/${id}`)
+  }
 }

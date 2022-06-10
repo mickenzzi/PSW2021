@@ -31,8 +31,11 @@ export class ClientComponent implements OnInit {
 
   patientTerms: TermResponse[] = [];
 
+  //create term form
   flag1: boolean = false;
+  //select term from lists
   flag2: boolean = false;
+  //show terms
   flag3: boolean = false;
   isFailed: boolean = false;
   errorMessage: string = "";
@@ -79,18 +82,16 @@ export class ClientComponent implements OnInit {
           this.termService.schedule(this.termRequest).subscribe(data => {
             this.terms = data;
             this.errorMessage = ""
+            this.flag2 = true;
+            this.flag1 = false;
             if (this.terms.length === 0) {
               this.isFailed = true;
               this.errorMessage = "There is no free terms."
             }
           }, (error: HttpErrorResponse) => {
-            this.flag1 = true;
-            this.flag2 = false;
             this.isFailed = true;
             this.errorMessage = "You can reserve term only at full hours."
           });
-          this.flag2 = true;
-          this.flag1 = false;
         }
         else {
           this.isFailed = true;
@@ -231,5 +232,9 @@ export class ClientComponent implements OnInit {
   signout() {
     this.auth.signOut();
     this.router.navigate(['']);
+  }
+
+  redirectToClientTerms(){
+    this.router.navigate(['/clientTerms'])
   }
 }
