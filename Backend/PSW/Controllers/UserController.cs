@@ -44,8 +44,9 @@ namespace PSW.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
-        public IActionResult CreateUser([FromBody] UserDTO userDTO)
+        [AllowAnonymous]
+        [HttpPost("registration")]
+        public IActionResult CreateUser([FromBody] UserRegistrationDTO userDTO)
         {
 
             User user = new User(userDTO);

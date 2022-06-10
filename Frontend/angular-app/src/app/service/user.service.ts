@@ -19,7 +19,6 @@ export class UserService {
   }
 
   public registration(request: RegistrationRequest) : Observable<any> {
-    console.log(request)
-    return this.http.post(`${this.userUrl}`, request)
+    return this.http.post(`${this.userUrl}/registration`, request)
   }
 }

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp5.0</TargetFramework>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +15,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Npgsql" Version="5.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.0" />
+    <PackageReference Include="SSH.NET" Version="2020.0.2" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.17.0" />
+    <PackageReference Include="WinSCP" Version="5.19.6" />
   </ItemGroup>
 
 </Project>

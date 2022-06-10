@@ -5,8 +5,12 @@
 				<h2 style="margin-left:90px;">Registration</h2>
 			</header>
 			<form class="login-form" (ngSubmit)="onSubmit()">
-                <input type="text" class="login-input" [(ngModel)]="user.FirstName" placeholder="Firstname" [ngModelOptions]="{standalone: true}" required autofocus/>
-                <input type="text" class="login-input" [(ngModel)]="user.LastName" placeholder="Lastname" [ngModelOptions]="{standalone: true}" required autofocus/>
+                <input type="text" style="width: 48%" class="login-input" [(ngModel)]="user.FirstName" placeholder="Firstname" [ngModelOptions]="{standalone: true}" required autofocus/>
+                <input type="text" style="width: 48%; margin-left: 10px" class="login-input" [(ngModel)]="user.LastName" placeholder="Lastname" [ngModelOptions]="{standalone: true}" required autofocus/>
+				<input type="text" style="width: 48%" class="login-input " [(ngModel)]="user.Address" placeholder="Address" [ngModelOptions]="{standalone: true}" required autofocus/>
+				<input type="text" style="width: 48%; margin-left: 10px" class="login-input" [(ngModel)]="user.Country" placeholder="Country" [ngModelOptions]="{standalone: true}" required autofocus/>
+				<input type="text" class="login-input" [(ngModel)]="user.DateOfBirth" placeholder="Date of birth" [ngModelOptions]="{standalone: true}" required autofocus/>
+				<input type="text" class="login-input" [(ngModel)]="user.PhoneNumber" placeholder="Phone number" [ngModelOptions]="{standalone: true}" required autofocus/>
 				<input type="text" class="login-input" [(ngModel)]="user.Username" placeholder="Username" [ngModelOptions]="{standalone: true}" required autofocus/>
 				<input type="password" class="login-input" [(ngModel)]="user.Password" [ngModelOptions]="{standalone: true}" placeholder="Password" required autofocus/>
                 <input type="password" class="login-input" [(ngModel)]="user.Password1" [ngModelOptions]="{standalone: true}" placeholder="Re-enter password" required autofocus/>

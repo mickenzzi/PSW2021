@@ -16,7 +16,19 @@ export class TermService {
     return this.http.post(`${this.termsUrl}/schedule`, termRequest)
   }
 
+  public reject(id: string) : Observable<any> {
+    return this.http.delete(`${this.termsUrl}/reject/${id}`)
+  }
+
   public reserve(termRequest: Term) : Observable<any> {
     return this.http.post(`${this.termsUrl}/reserve`, termRequest)
+  }
+
+  public getAllPatientTerms(id: string) : Observable<any>{
+    return this.http.get(`${this.termsUrl}/patient/${id}`)
+  }
+
+  public getAllDoctorTerms(id: string) : Observable<any>{
+    return this.http.get(`${this.termsUrl}/doctor/${id}`)
   }
 }

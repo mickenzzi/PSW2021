@@ -1,5 +1,5 @@
 export class Term {
-    Id?: string;
+    Id: string = "";
     UserId?: string;
     DoctorId?: string;
     DateTimeTerm?: string;

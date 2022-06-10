@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
@@ -26,64 +25,79 @@ export class ClientComponent implements OnInit {
   terms: TermResponse[] = [];
   selectedDoctor: Doctor = new Doctor();
   selectedTerm: Term = new Term();
+  selectedTermForReject: Term = new Term();
   doctorPriority: boolean = false;
   currentUser: User = new User();
 
+  patientTerms: TermResponse[] = [];
+
   flag1: boolean = false;
   flag2: boolean = false;
+  flag3: boolean = false;
   isFailed: boolean = false;
   errorMessage: string = "";
 
-  constructor(private termService: TermService, private auth: TokenStorageService, private router: Router, private doctorService: DoctorService) { 
+  constructor(private termService: TermService, private auth: TokenStorageService, private router: Router, private doctorService: DoctorService) {
     this.nonSpecialist = [];
     this.specialist = [];
     this.doctors = [];
-    this.terms  = [];
+    this.terms = [];
+    this.patientTerms = [];
   }
 
   ngOnInit(): void {
-    if(this.auth.getToken() == null) {
+    if (this.auth.getToken() == null) {
       this.logout();
     }
     else {
+      this.currentUser = this.auth.getUser();
       this.getSpecialistDoctor();
       this.getNonSpecialistDoctor();
       this.getAllDoctors();
-      this.currentUser = this.auth.getUser();
+      this.getPatientTerms();
     }
   }
 
-  reserveTerm(){
-    if(this.selectedDoctor.Id === null || this.selectedDoctor.Id === undefined){
+  reserveTerm() {
+    if (this.selectedDoctor.Id === null || this.selectedDoctor.Id === undefined) {
       this.isFailed = true;
       this.errorMessage = "Choose a doctor."
     }
-    else if(this.termRequest.startDate === undefined || this.termRequest.endDate === undefined ||
-      this.termRequest.startDate === null || this.termRequest.endDate === null ) {
+    else if (this.termRequest.startDate === undefined || this.termRequest.endDate === undefined ||
+      this.termRequest.startDate === null || this.termRequest.endDate === null) {
       this.isFailed = true;
       this.errorMessage = "Some fields are empty."
     }
     else {
-      if(Date.parse(this.termRequest.startDate) > 0 && Date.parse(this.termRequest.endDate) > 0){
-        this.termRequest.doctorId = this.selectedDoctor.Id;
-        this.termRequest.doctorPriority = this.doctorPriority;
-        this.termRequest.userId = this.currentUser.Id;
-        this.termService.schedule(this.termRequest).subscribe(data => {
-          this.terms = data;
-          if(this.terms.length === 0){
-            this.isFailed = true;
-            this.errorMessage = "There is no free terms."
-          }
-        }, (error: HttpErrorResponse) => {
+      if (Date.parse(this.termRequest.startDate) > 0 && Date.parse(this.termRequest.endDate) > 0) {
+        let now = new Date();
+        let start = new Date(this.termRequest.startDate);
+        if (start >= now) {
+          this.termRequest.doctorId = this.selectedDoctor.Id;
+          this.termRequest.doctorPriority = this.doctorPriority;
+          this.termRequest.userId = this.currentUser.Id;
+          this.termService.schedule(this.termRequest).subscribe(data => {
+            this.terms = data;
+            this.errorMessage = ""
+            if (this.terms.length === 0) {
+              this.isFailed = true;
+              this.errorMessage = "There is no free terms."
+            }
+          }, (error: HttpErrorResponse) => {
             this.flag1 = true;
             this.flag2 = false;
             this.isFailed = true;
             this.errorMessage = "You can reserve term only at full hours."
-        });
-        this.flag2 = true;
-        this.flag1 = false;
+          });
+          this.flag2 = true;
+          this.flag1 = false;
+        }
+        else {
+          this.isFailed = true;
+          this.errorMessage = "You can't reserve time at past.";
+        }
       }
-      else{
+      else {
         this.isFailed = true;
         this.errorMessage = "Invalid data format.";
       }
@@ -99,36 +113,50 @@ export class ClientComponent implements OnInit {
   showTermReserveForm() {
     this.flag1 = true;
     this.flag2 = false;
+    this.flag3 = false;
     this.isFailed = false;
+    this.termRequest = new TermRequest();
+    this.selectedDoctor = new Doctor();
+    this.selectedTermForReject = new Term();
+    this.selectedTerm = new Term();
   }
 
   cancel() {
     this.flag1 = false;
+    this.flag3 = false;
     this.isFailed = false;
     this.termRequest = new TermRequest();
     this.selectedDoctor = new Doctor();
+    this.selectedTermForReject = new Term();
+    this.selectedTerm = new Term();
   }
 
   getSpecialistDoctor() {
-    this.doctorService.getAllSpecialist().subscribe( data => {
+    this.doctorService.getAllSpecialist().subscribe(data => {
       this.specialist = data;
     })
   }
 
   getNonSpecialistDoctor() {
-    this.doctorService.getAllNonSpecialist().subscribe( data => {
+    this.doctorService.getAllNonSpecialist().subscribe(data => {
       this.nonSpecialist = data;
     })
   }
 
-  getAllDoctors(){
-    this.doctorService.getAllDoctors().subscribe( data => {
+  getAllDoctors() {
+    this.doctorService.getAllDoctors().subscribe(data => {
       this.doctors = data;
     })
   }
 
+  getPatientTerms() {
+    this.termService.getAllPatientTerms(this.currentUser.Id).subscribe(response => {
+      this.patientTerms = response;
+    })
+  }
 
-  changeDoctor(doctor: Doctor){
+
+  changeDoctor(doctor: Doctor) {
     this.selectedDoctor = doctor;
   }
 
@@ -139,23 +167,69 @@ export class ClientComponent implements OnInit {
     this.selectedTerm.DateTimeTerm = term.DateTimeTerm;
   }
 
+  selectTermForReject(term: TermResponse) {
+    this.selectedTermForReject.Id = term.Id;
+    this.selectedTermForReject.UserId = term.TermUser?.Id;
+    this.selectedTermForReject.DoctorId = term.TermDoctor?.Id;
+    this.selectedTermForReject.DateTimeTerm = term.DateTimeTerm;
+  }
+
 
   createTerm() {
-    if(this.selectedTerm.Id === null || this.selectedTerm.Id === undefined){
+    if (this.selectedTerm.Id === null || this.selectedTerm.Id === undefined) {
       this.isFailed = true;
       this.errorMessage = "Choose a term."
     }
-    else{
+    else {
       this.termService.reserve(this.selectedTerm).subscribe(data => {
         this.isFailed = false;
+        this.getPatientTerms();
+        this.selectedTerm = new Term();
+        this.termRequest = new TermRequest();
+        this.selectedDoctor = new Doctor();
+        this.flag2 = false;
+        alert("You are successfully reserve a term.");
+      })
+    }
+  }
+
+  rejectTerm(id: string) {
+    if (this.selectedTermForReject.Id.length === 0) {
+      this.isFailed = true;
+      this.errorMessage = "Select term."
+    }
+    else {
+      this.termService.reject(id).subscribe(response => {
+        alert("You are successfully rejected term.");
+        this.getPatientTerms();
+        this.isFailed = false;
+        this.selectedTermForReject = new Term();
+      }, (error: HttpErrorResponse) => {
+        alert("You can't reject your term because the differnce between your term date and now is lower than 48 hours.");
       })
     }
   }
 
   cancelReservation() {
+    this.flag3 = false;
     this.flag2 = false;
     this.flag1 = true;
     this.isFailed = false;
     this.selectedTerm = new Term();
+  }
+
+  showTerms() {
+    this.flag3 = true;
+    this.flag1 = false;
+    this.flag2 = false;
+    this.termRequest = new TermRequest();
+    this.selectedDoctor = new Doctor();
+    this.selectedTermForReject = new Term();
+    this.selectedTerm = new Term();
+  }
+
+  signout() {
+    this.auth.signOut();
+    this.router.navigate(['']);
   }
 }

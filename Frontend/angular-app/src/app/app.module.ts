@@ -10,13 +10,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { ClientComponent } from './components/client/client.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DoctorComponent } from './components/doctor/doctor.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     RegistrationComponent,
-    ClientComponent
+    ClientComponent,
+    DoctorComponent
   ],
   imports: [
     BrowserModule,

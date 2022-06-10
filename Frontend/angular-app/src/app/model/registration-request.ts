@@ -1,6 +1,10 @@
 export class RegistrationRequest {
-    firstName?: String;
-    lastName?: String;
-    username?: String;
-    password?: String;
+    FirstName?: string;
+    LastName?: string;
+    Username?: string;
+    Password?: string;
+    Address?: string;
+    Country?: string;
+    DateOfBirth?: string;
+    PhoneNumber?: string;
 }

@@ -1,8 +1,11 @@
 ﻿using PSW.DTO;
 using PSW.Model;
 using PSW.Repository.Interface;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using WinSCP;
 
 namespace PSW.Service
 {
@@ -59,7 +62,6 @@ namespace PSW.Service
             User user = _userRepository.GetAll().SingleOrDefault(u => u.Username == userDTO.Username && u.Password == userDTO.Password);
             return user;
         }
-
 
     }
 }

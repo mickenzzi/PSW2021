@@ -46,16 +46,36 @@ namespace PSW.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult ReserveTerm([FromBody] Term term)
         {
-            Console.Out.WriteLine(term.DateTimeTerm);
             return Ok(_termService.ReserveTerm(term));
         }
 
-        [HttpDelete("reject")]
+        [HttpDelete("reject/{id}")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult RejectTerm([FromBody] Term term)
+        public IActionResult RejectTerm([FromRoute] string id)
         {
-            _termService.RejectTerm(term);
-            return Ok(new { message = "Success" });
+            Term term = _termService.GetTermById(id);
+            if (_termService.RejectTerm(term))
+            {
+                return Ok(new { message = "Success" });
+            }
+            else
+            {
+                return BadRequest(new { message = "You can't reject your term because the differnce between your term date and now is lower than 48 hours." });
+            }
+        }
+
+        [HttpGet("patient/{id}")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetPatientTerms([FromRoute] string id)
+        {
+            return Ok(_termService.GetAllPatientTerms(id));
+        }
+
+        [HttpGet("doctor/{id}")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetDoctorTerms([FromRoute] string id)
+        {
+            return Ok(_termService.GetAllDoctorTerms(id));
         }
 
 

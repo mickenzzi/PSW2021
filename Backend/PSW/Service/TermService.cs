@@ -26,14 +26,64 @@ namespace PSW.Service
             return _termRepository.GetAll();
         }
 
+        public Term GetTermById(string id)
+        {
+            return _termRepository.GetTermById(id);
+        }
+
         public bool ReserveTerm(Term term)
         {
             return _termRepository.Create(term);
         }
 
-        public void RejectTerm(Term term)
+        public bool RejectTerm(Term term)
         {
+            DateTime now = DateTime.Now;
+            DateTime start = DateTime.Parse(term.DateTimeTerm);
+            if((start-now).TotalDays < 2)
+            {
+                return false;
+            }
             _termRepository.Delete(term);
+            return true;
+        }
+
+        public List<TermResponse> GetAllDoctorTerms(string id)
+        {
+            List<Term> allTerms = _termRepository.GetAll();
+            List<TermResponse> doctorTerms = new List<TermResponse>();
+            foreach(Term t in allTerms)
+            {
+                if (t.DoctorId.Equals(id))
+                {
+                    TermResponse termResponse = new TermResponse();
+                    termResponse.DateTimeTerm = t.DateTimeTerm;
+                    termResponse.Id = t.Id;
+                    termResponse.TermDoctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                    termResponse.TermUser = _userRepository.GetUserById(t.UserId);
+                    doctorTerms.Add(termResponse);
+                }
+            }
+            return doctorTerms;
+        }
+
+        public List<TermResponse> GetAllPatientTerms(string id)
+        {
+            List<Term> allTerms = _termRepository.GetAll();
+            List<TermResponse> patientTerms = new List<TermResponse>();
+            foreach (Term t in allTerms)
+            {
+                if (t.UserId.Equals(id))
+                {
+                    TermResponse termResponse = new TermResponse();
+                    termResponse.DateTimeTerm = t.DateTimeTerm;
+                    termResponse.Id = t.Id;
+                    termResponse.TermDoctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                    termResponse.TermUser = _userRepository.GetUserById(t.UserId);
+                    patientTerms.Add(termResponse);
+                }
+            }
+            return patientTerms;
         }
 
         public List<TermResponse> ScheduleTerm(TermDTO termDTO)
