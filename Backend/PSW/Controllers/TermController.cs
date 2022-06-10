@@ -71,6 +71,20 @@ namespace PSW.Controllers
             return Ok(_termService.GetAllPatientTerms(id));
         }
 
+        [HttpGet("completed/{id}")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetPatientCompletedTerms([FromRoute] string id)
+        {
+            return Ok(_termService.GetPatientFinishedTerms(id));
+        }
+
+        [HttpGet("future/{id}")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetPatientFutureTerms([FromRoute] string id)
+        {
+            return Ok(_termService.GetPatientFutureTerms(id));
+        }
+
         [HttpGet("doctor/{id}")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetDoctorTerms([FromRoute] string id)

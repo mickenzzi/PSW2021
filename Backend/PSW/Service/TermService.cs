@@ -86,6 +86,37 @@ namespace PSW.Service
             return patientTerms;
         }
 
+        public List<TermResponse> GetPatientFutureTerms(string id)
+        {
+            List<TermResponse> patientTerms = GetAllPatientTerms(id);
+            List<TermResponse> featureTerms = new List<TermResponse>();
+            DateTime now = DateTime.Now;
+            foreach(TermResponse t in patientTerms) 
+            { 
+                if(DateTime.Parse(t.DateTimeTerm)>= now)
+                {
+                    featureTerms.Add(t);
+                }
+            }
+            return featureTerms;
+        }
+
+        public List<TermResponse> GetPatientFinishedTerms(string id)
+        {
+            List<TermResponse> patientTerms = GetAllPatientTerms(id);
+            List<TermResponse> featureTerms = new List<TermResponse>();
+            DateTime now = DateTime.Now;
+            foreach (TermResponse t in patientTerms)
+            {
+                if (DateTime.Parse(t.DateTimeTerm) < now)
+                {
+                    featureTerms.Add(t);
+                }
+            }
+            return featureTerms;
+        }
+
+
         public List<TermResponse> ScheduleTerm(TermDTO termDTO)
         {
             bool termExist = CheckUsedTerm(termDTO.StartDate, termDTO.EndDate, termDTO.DoctorId);
