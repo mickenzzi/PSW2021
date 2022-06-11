@@ -1,4 +1,5 @@
-﻿using PSW.DTO;
+﻿using IronPdf;
+using PSW.DTO;
 using PSW.Model;
 using PSW.Repository.Interface;
 using System;
@@ -10,14 +11,14 @@ namespace PSW.Service
     public class TermService
     {
         private readonly ITermRepository _termRepository;
-        private readonly IDoctorRepository _doctorRepository;
         private readonly IUserRepository _userRepository;
+        private readonly DoctorService _doctorService;
 
-        public TermService(ITermRepository termRepository, IDoctorRepository doctorRepository, IUserRepository userRepository)
+        public TermService(ITermRepository termRepository, IUserRepository userRepository, DoctorService doctorService)
         {
             _termRepository = termRepository;
-            _doctorRepository = doctorRepository;
             _userRepository = userRepository;
+            _doctorService = doctorService;
 
         }
 
@@ -33,7 +34,30 @@ namespace PSW.Service
 
         public bool ReserveTerm(Term term)
         {
+            User doctor = _userRepository.GetUserById(term.DoctorId);
+            if (!doctor.Specialization.Equals("GeneralPractitioner"))
+            {
+                createReferral(term);
+            }
             return _termRepository.Create(term);
+        }
+
+        private void createReferral(Term term)
+        {
+            User doctor = _userRepository.GetUserById(term.DoctorId);
+            User user = _userRepository.GetUserById(term.UserId);
+            var userFullName = user.FirstName + " " + user.LastName;
+            var doctorFullName = doctor.FirstName + " " + doctor.LastName;
+            string termDate = term.DateTimeTerm;
+            DateTime now = DateTime.Now;
+            var html = "<br><h1 style = \"text-align: center;\">Uput doktoru specijalisti</h1><br>" +
+                "<label style = \"font-size: medium;\">Doktor: " + doctorFullName + "</label>" +
+                "<label style = \"margin-left: 160px; font-size: medium;\">Datum: " + now.ToString() + "</label><br><br><br>" +
+                "<label style = \"font-size: large; margin-left: 45%;\">Razlog: </label><br><br><label>Kreiranje zahteva za uput doktoru specijalisti na zahtev pacijenta za datum " + termDate + "." + "</label><br><br><br><br>" +
+                "<label style = \"font-size: medium;\">Pacijent: " + userFullName + "</label>";
+            var render = new ChromePdfRenderer();
+            var pdf = render.RenderHtmlAsPdf(html);
+            pdf.SaveAs(@"C:\Users\HP\Desktop\PSW\PSW2021\Backend\referrals\" + term.Id + ".pdf");
         }
 
         public bool RejectTerm(Term term)
@@ -48,6 +72,11 @@ namespace PSW.Service
             return true;
         }
 
+        public void DeleteTerm(Term term)
+        {
+            _termRepository.Delete(term);
+        }
+
         public List<TermResponse> GetAllDoctorTerms(string id)
         {
             List<Term> allTerms = _termRepository.GetAll();
@@ -59,7 +88,7 @@ namespace PSW.Service
                     TermResponse termResponse = new TermResponse();
                     termResponse.DateTimeTerm = t.DateTimeTerm;
                     termResponse.Id = t.Id;
-                    termResponse.TermDoctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                    termResponse.TermDoctor = _userRepository.GetUserById(t.DoctorId);
                     termResponse.TermUser = _userRepository.GetUserById(t.UserId);
                     doctorTerms.Add(termResponse);
                 }
@@ -78,7 +107,7 @@ namespace PSW.Service
                     TermResponse termResponse = new TermResponse();
                     termResponse.DateTimeTerm = t.DateTimeTerm;
                     termResponse.Id = t.Id;
-                    termResponse.TermDoctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                    termResponse.TermDoctor = _userRepository.GetUserById(t.DoctorId);
                     termResponse.TermUser = _userRepository.GetUserById(t.UserId);
                     patientTerms.Add(termResponse);
                 }
@@ -142,7 +171,7 @@ namespace PSW.Service
                 TermResponse termResponse = new TermResponse();
                 termResponse.DateTimeTerm = t.DateTimeTerm;
                 User user = _userRepository.GetUserById(t.UserId);
-                Doctor doctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                User doctor = _userRepository.GetUserById(t.DoctorId);
                 termResponse.Id = t.Id;
                 termResponse.TermUser = user;
                 termResponse.TermDoctor = doctor;
@@ -192,9 +221,9 @@ namespace PSW.Service
         {
             List<Term> terms = _termRepository.GetAll();
             List<Term> availableTerms = new List<Term>();
-            List<Doctor> matchingDoctors = FindMatchingDoctors(termDTO);
+            List<User> matchingDoctors = FindMatchingDoctors(termDTO);
 
-            foreach(Doctor d in matchingDoctors)
+            foreach(User d in matchingDoctors)
             {
                 TermDTO dto = new TermDTO();
                 dto.StartDate = termDTO.StartDate;
@@ -208,16 +237,16 @@ namespace PSW.Service
 
         }
 
-        private List<Doctor> FindMatchingDoctors(TermDTO termDTO)
+        private List<User> FindMatchingDoctors(TermDTO termDTO)
         {
-            List<Doctor> allDoctors = _doctorRepository.GetAll();
+            List<User> allDoctors = _doctorService.GetAllDoctors();
             List<Term> allTerms = _termRepository.GetAll();
             List<Term> usedTerms = new List<Term>();
-            Doctor requiredDoctor = _doctorRepository.GetDoctorById(termDTO.DoctorId);
-            List<Doctor> matchingDoctors = new List<Doctor>();
+            User requiredDoctor = _userRepository.GetUserById(termDTO.DoctorId);
+            List<User> matchingDoctors = new List<User>();
             foreach(Term t in allTerms)
             {
-                Doctor usedDoctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                User usedDoctor = _userRepository.GetUserById(t.DoctorId);
                 if(usedDoctor.Specialization.Equals(requiredDoctor.Specialization) && DateTime.Parse(t.DateTimeTerm) >= termDTO.StartDate && DateTime.Parse(t.DateTimeTerm) <= termDTO.EndDate)
                 {
                     usedTerms.Add(t);
@@ -226,11 +255,11 @@ namespace PSW.Service
 
             foreach(Term t in usedTerms)
             {
-                Doctor doctor = _doctorRepository.GetDoctorById(t.DoctorId);
+                User doctor = _userRepository.GetUserById(t.DoctorId);
                 allDoctors.Remove(doctor);
             }
 
-            foreach(Doctor d in allDoctors)
+            foreach(User d in allDoctors)
             {
                 if (d.Specialization.Equals(requiredDoctor.Specialization))
                 {

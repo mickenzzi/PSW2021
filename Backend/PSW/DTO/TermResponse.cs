@@ -11,7 +11,7 @@ namespace PSW.DTO
         public string Id { get; set; }
         public string DateTimeTerm { get; set; }
         public User TermUser { get; set; }
-        public Doctor TermDoctor { get; set; }
+        public User TermDoctor { get; set; }
 
         public TermResponse() { }
     }

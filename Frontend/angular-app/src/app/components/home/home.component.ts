@@ -30,9 +30,9 @@ export class HomeComponent implements OnInit {
 
   onSubmit(): void {
     const data = {
-			username : this.form.username,
-			password : this.form.password
-		}
+      username: this.form.username,
+      password: this.form.password
+    }
 
     this.userService.login(data).subscribe(
       data => {
@@ -42,7 +42,12 @@ export class HomeComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.errorMessage = ""
-        this.router.navigate(['/client'])
+        if (data.LoggedUser.Role === "Client") {
+          this.router.navigate(['/client'])
+        }
+        else if(data.LoggedUser.Role === "Doctor"){
+          this.router.navigate(['/doctor'])
+        }
       },
       err => {
         this.errorMessage = "Invalid username or password.";

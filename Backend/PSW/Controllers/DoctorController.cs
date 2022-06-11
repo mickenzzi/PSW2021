@@ -14,12 +14,14 @@ namespace PSW.Controllers
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly DoctorService _doctorService;
+        private readonly UserService _userService;
 
-        public DoctorController(IConfiguration configuration, IMapper mapper, DoctorService doctorService)
+        public DoctorController(IConfiguration configuration, IMapper mapper, DoctorService doctorService, UserService userService)
         {
             _configuration = configuration;
             _mapper = mapper;
             _doctorService = doctorService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -47,7 +49,7 @@ namespace PSW.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetDoctorById([FromRoute] string id)
         {
-            Doctor doctor = _doctorService.GetDoctorById(id);
+            User doctor = _userService.GetUserById(id);
             if (doctor == null)
                 return BadRequest(new { message = "Invalid id" });
             return Ok(doctor);

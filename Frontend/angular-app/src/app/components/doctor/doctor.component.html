@@ -1,1 +1,93 @@
-<p>doctor works!</p>
+<body style="background-color: whitesmoke;">
+    <button class="button-reject" (click)="signout()" style="margin-left: 30px; margin-top: 30px;">Sign out</button>
+    <br>
+    <button (click)="showTerms()"
+        style="font-size: large; margin-left: 45%; color: blue; border: none; background-color: transparent;">Terms</button>
+    <div *ngIf="flag1"
+        style="margin-left: 20px; margin-top: 20px; background-color:darkslategrey; width: 600px; height: 400px; position: fixed;">
+        <br>
+        <table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
+            <tr class="table-header">
+                <th class="header__item">Date</th>
+                <th class="header__item">Doctor</th>
+                <th class="header__item">User</th>
+                <th class="header__item"></th>
+            </tr>
+            <tr *ngFor="let term of terms" class="table-row">
+                <td class="table-data">{{term.DateTimeTerm}}</td>
+                <td class="table-data">{{term.TermDoctor?.FirstName}} {{term.TermDoctor?.LastName}}</td>
+                <td class="table-data">{{term.TermUser?.FirstName}} {{term.TermUser?.LastName}}</td>
+                <td><button *ngIf="term.TermDoctor?.Specialization === 'GeneralPractitioner'" class="button-accept" (click)="selectTerm(term)">Referral</button></td>
+                <td><button class="button-reject" (click)="deleteTerm(term.Id)">Delete</button></td>
+            </tr>
+        </table>
+        <br>
+        <label class="input-text" style="margin-left: 10px;">Selected term: {{selectedTerm.DateTimeTerm}}</label>
+        <br>
+        <br>
+        <br>
+    </div>
+
+    <div *ngIf="flag2"
+        style="margin-left: 700px; margin-top: 20px; background-color:darkslategrey; width: 330px; height: 540px;">
+        <br>
+        <label class="input-text" style="margin-left: 10px;">Start date:</label><br>
+        <input type="text" [(ngModel)]="termRequest.startDate" placeholder="Date format: YYYY-MM-DD hh:mm"
+            style="width:300px; margin-left: 10px;"><br><br>
+        <label class="input-text" style="margin-left: 10px;">End date:</label><br>
+        <input type="text" [(ngModel)]="termRequest.endDate" placeholder="Date format: YYYY-MM-DD hh:mm"
+            style="width:300px; margin-left: 10px;"><br><br>
+
+        <table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
+            <tr class="table-header">
+                <th class="header__item">Doctor</th>
+                <th class="header__item">Specialization</th>
+                <th class="header__item">Select</th>
+            </tr>
+            <tr *ngFor="let doctor of specialist" class="table-row">
+                <td class="table-data">{{doctor.FirstName}} {{doctor.LastName}}</td>
+                <td class="table-data">{{doctor.Specialization}}</td>
+                <td><button class="button-accept" (click)="changeDoctor(doctor)">Select</button></td>
+            </tr>
+        </table>
+        <br>
+        <label class="input-text" style="margin-left: 10px;">Doctor priority:</label>
+        <input type="checkbox" [(ngModel)]="doctorPriority">
+        <br>
+        <label class="input-text" style="margin-left: 10px;">Selected doctor: {{selectedDoctor.FirstName}}
+            {{selectedDoctor.LastName}}</label>
+        <br>
+        <br>
+        <label style="color:red; margin-left: 70px;" *ngIf="isFailed"> {{errorMessage}}</label>
+        <br>
+        <br>
+        <button style="margin-left: 60px;" class="button-accept" (click)="reserveTerm()">Reserve</button>
+        <button class="button-reject" style="margin-left: 15px;" (click)="cancel()">Cancel</button>
+    </div>
+
+    <div *ngIf="flag3"
+      style="margin-left: 700px; margin-top: 20px; background-color:darkslategrey; width: 330px; height: 540px;">
+      <br>
+      <table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
+        <tr class="table-header">
+          <th class="header__item">Date</th>
+          <th class="header__item">Doctor</th>
+          <th class="header__item">Select</th>
+        </tr>
+        <tr *ngFor="let term of terms1" class="table-row">
+          <td class="table-data">{{term.DateTimeTerm}}</td>
+          <td class="table-data">{{term.TermDoctor?.FirstName}} {{term.TermDoctor?.LastName}}</td>
+          <td><button class="button-accept" (click)="selectTerm1(term)">Select</button></td>
+        </tr>
+      </table>
+      <br>
+      <label class="input-text" style="margin-left: 10px;">Selected term: {{selectedTerm1.DateTimeTerm}}</label>
+      <br>
+      <label style="color:red; margin-left: 70px;" *ngIf="isFailed"> {{errorMessage}}</label>
+      <br>
+      <br>
+      <button style="margin-left: 60px;" class="button-accept" (click)="createTerm()">Reserve</button>
+      <button class="button-reject" style="margin-left: 15px;" (click)="cancelReservation()">Cancel</button>
+    </div>
+
+</body>

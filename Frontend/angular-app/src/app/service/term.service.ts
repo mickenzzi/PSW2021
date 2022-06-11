@@ -20,6 +20,10 @@ export class TermService {
     return this.http.delete(`${this.termsUrl}/reject/${id}`)
   }
 
+  public delete(id: string) : Observable<any> {
+    return this.http.delete(`${this.termsUrl}/${id}`)
+  }
+
   public reserve(termRequest: Term) : Observable<any> {
     return this.http.post(`${this.termsUrl}/reserve`, termRequest)
   }

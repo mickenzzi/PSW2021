@@ -64,6 +64,24 @@ namespace PSW.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult DeleteTerm([FromRoute] string id)
+        {
+            Term term = _termService.GetTermById(id);
+            DateTime now = DateTime.Now;
+            DateTime termDate = DateTime.Parse(term.DateTimeTerm);
+            if (now > termDate)
+            {
+                _termService.DeleteTerm(term);
+                return Ok(new { message = "Success" });
+            }
+            else
+            {
+                return BadRequest(new { message = "You can't delete future term." });
+            }
+        }
+
         [HttpGet("patient/{id}")]
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetPatientTerms([FromRoute] string id)

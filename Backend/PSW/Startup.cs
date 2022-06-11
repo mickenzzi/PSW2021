@@ -78,7 +78,6 @@ namespace PSW
 
             //Dependency injection
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<ITermRepository, TermRepository>();
             //Services
             services.AddTransient<UserService>();

@@ -15,7 +15,19 @@ namespace PSW.Model
         public enum UserRole
         {
             Client,
-            Admin
+            Admin,
+            Doctor
+        }
+
+        public enum DoctorSpecialization
+        {
+            Cardiology,
+            Dermatology,
+            Pediatrics,
+            Oncology,
+            Orthopedic,
+            Psychiatry,
+            GeneralPractitioner
         }
 
         [Key]
@@ -39,6 +51,8 @@ namespace PSW.Model
         public string Country { get; set; }
         [Column("phone")]
         public string PhoneNumber { get; set; }
+        [Column("specialization")]
+        public string Specialization { get; set; }
 
         public User()
         {
@@ -56,6 +70,7 @@ namespace PSW.Model
             Address = userDTO.Address;
             Country = userDTO.Country;
             PhoneNumber = userDTO.PhoneNumber;
+            Specialization = "None";
         }
 
     }

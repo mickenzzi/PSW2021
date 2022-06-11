@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IronPdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -97,6 +98,7 @@ namespace PSW.Controllers
             return Ok(new { Token = tokenString, LoggedUser = user, Message = "Success" });
 
         }
+
 
         private string GenerateJwtToken(string username)
         {

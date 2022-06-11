@@ -9,7 +9,6 @@ namespace PSW.DAL
         public PSWStoreContext(DbContextOptions<PSWStoreContext> options) : base(options) { }
 
         public DbSet<User> User { get; set; }
-        public DbSet<Doctor> Doctor { get; set; }
 
         public DbSet<Term> Term { get; set; }
 

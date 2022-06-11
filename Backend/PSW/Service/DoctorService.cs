@@ -7,73 +7,53 @@ namespace PSW.Service
 {
     public class DoctorService
     {
-        private readonly IDoctorRepository _doctorRepository;
+        private readonly IUserRepository _userRepository;
         
-        public DoctorService(IDoctorRepository doctorRepository)
+        public DoctorService(IUserRepository userRepository)
         {
-            _doctorRepository = doctorRepository;
+            _userRepository = userRepository;
         }
 
-        public List<Doctor> GetAllDoctors()
+        public List<User> GetAllDoctors()
         {
-            return _doctorRepository.GetAll();
-        }
-
-        public List<Doctor> GetAllSpecialist()
-        {
-            List<Doctor> doctors = _doctorRepository.GetAll();
-            List<Doctor> specialsit = new List<Doctor>();
-            foreach(Doctor d in doctors)
+            List<User> users = _userRepository.GetAll();
+            List<User> doctors = new List<User>();
+            foreach(User u in users)
             {
-                if (!d.Specialization.ToLower().Equals("GeneralPractitioner".ToLower()))
+                if (u.Role.Equals("Doctor"))
                 {
-                    specialsit.Add(d);
+                    doctors.Add(u);
                 }
             }
-
-            return specialsit;
+            return doctors;
         }
-        public List<Doctor> GetAllNonSpecialist()
+
+        public List<User> GetAllSpecialist()
         {
-            List<Doctor> doctors = _doctorRepository.GetAll();
-            List<Doctor> nonSpecialsit = new List<Doctor>();
-            foreach (Doctor d in doctors)
+            List<User> users = _userRepository.GetAll();
+            List<User> doctors = new List<User>();
+            foreach (User u in users)
             {
-                if (d.Specialization.ToLower().Equals("GeneralPractitioner".ToLower()))
+                if (u.Role.Equals("Doctor") && !u.Specialization.ToLower().Equals("GeneralPractitioner".ToLower()))
                 {
-                    nonSpecialsit.Add(d);
+                    doctors.Add(u);
                 }
             }
-
-            return nonSpecialsit;
+            return doctors;
         }
-
-        public Doctor GetDoctorById(string id)
+        public List<User> GetAllNonSpecialist()
         {
-            return _doctorRepository.GetDoctorById(id);
-        }
-
-        public void DeleteDoctor(Doctor doctor)
-        {
-            _doctorRepository.Delete(doctor);
-        }
-
-        public bool CreateDoctor(Doctor doctor)
-        {
-            return _doctorRepository.Create(doctor);
-        }
-
-        public bool UpdateDoctor(DoctorDTO doctorDTO)
-        {
-            Doctor doctor = _doctorRepository.GetDoctorById(doctorDTO.Id);
-            if(doctor == null)
+            List<User> users = _userRepository.GetAll();
+            List<User> doctors = new List<User>();
+            foreach (User u in users)
             {
-                return false;
+                if (u.Role.Equals("Doctor") && u.Specialization.ToLower().Equals("GeneralPractitioner".ToLower()))
+                {
+                    doctors.Add(u);
+                }
             }
-            doctor.FirstName = doctorDTO.FirstName;
-            doctor.LastName = doctorDTO.LastName;
-            doctor.Specialization = doctor.mappingSpecialization(doctorDTO.Specialization);
-            return _doctorRepository.Update(doctor);
+            return doctors;
         }
+
     }
 }
