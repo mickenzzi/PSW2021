@@ -1,8 +1,76 @@
 <body style="background-color: whitesmoke;">
     <div style="height:100%; width: 80px; background-color: midnightblue; position: fixed; padding-left: 10px;">
-        <button (click)="redirectHome()" style="border: none; background-color: transparent;"><img src="/assets/home.png" style="width: 50px; height: 50px; margin-top:50px;"></button>
-        <button (click)="signout()" style="border: none; background-color: transparent;"><img src="/assets/off.png" style="width: 40px; height: 40px; margin-top:50px;"></button>
+        <button (click)="redirectHome()" style="border: none; background-color: transparent;"><img
+                src="/assets/home.png" style="width: 50px; height: 50px; margin-top:50px;"></button>
+        <button (click)="signout()" style="border: none; background-color: transparent;"><img src="/assets/off.png"
+                style="width: 40px; height: 40px; margin-top:50px;"></button>
     </div>
-    <button style="margin-top: 20px; margin-left: 650px; border:none; background-color: transparent; color:blue; font-size: larger; font-weight: bold;">Finished</button>
-    <button style="background-color: transparent; border:none; color:blue; font-size: larger; font-weight: bold;">Future</button>
+    <button (click)="showFeedbackForm()"
+    style="margin-top: 20px; margin-left: 150px; border:none; background-color: transparent; color:blue; font-size: larger; font-weight: bold;">Leave feedback</button>
+    <button (click)="showCompleted()"
+        style="margin-top: 20px; margin-left: 350px; border:none; background-color: transparent; color:blue; font-size: larger; font-weight: bold;">Finished</button>
+    <button (click)="showFuture()"
+        style="background-color: transparent; border:none; color:blue; font-size: larger; font-weight: bold;">Future</button>
+
+    <div *ngIf="flag1"
+        style="margin-left: 150px; margin-top: 20px; background-color:darkslategrey; width: 600px; height: 400px; position: fixed;">
+        <br>
+        <table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
+            <tr class="table-header">
+                <th class="header__item">Date</th>
+                <th class="header__item">Doctor</th>
+                <th class="header__item">User</th>
+            </tr>
+            <tr *ngFor="let term of futureTerms" class="table-row">
+                <td class="table-data">{{term.DateTimeTerm}}</td>
+                <td class="table-data">{{term.TermDoctor?.FirstName}} {{term.TermDoctor?.LastName}}</td>
+                <td class="table-data">{{term.TermUser?.FirstName}} {{term.TermUser?.LastName}}</td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <br>
+    </div>
+
+    <div *ngIf="flag2"
+        style="margin-left: 150px; margin-top: 20px; background-color:darkslategrey; width: 600px; height: 400px; position: fixed;">
+        <br>
+        <table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
+            <tr class="table-header">
+                <th class="header__item">Date</th>
+                <th class="header__item">Doctor</th>
+                <th class="header__item">User</th>
+                <th class="header__item">Select</th>
+            </tr>
+            <tr *ngFor="let term of completedTerms" class="table-row">
+                <td class="table-data">{{term.DateTimeTerm}}</td>
+                <td class="table-data">{{term.TermDoctor?.FirstName}} {{term.TermDoctor?.LastName}}</td>
+                <td class="table-data">{{term.TermUser?.FirstName}} {{term.TermUser?.LastName}}</td>
+                <td><button (click)="selectTerm(term)" class="button-accept">Comment</button></td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <br>
+    </div>
+
+    <div *ngIf="flag3" style="margin-left: 870px; margin-top: 20px; width: 300px; height: 350px; background-color: darkslategrey;">
+        <br> <label style="margin-left: 10px; font-size: large; color: white;">Content:</label><br>
+        <textarea [(ngModel)]="comment.Content" style="margin-left: 10px; width: 250px; height: 150px;"></textarea> <br><br>
+        <label style="margin-left: 10px; font-size: large; color: white;">Grade:</label><br>
+        <input [(ngModel)]="comment.Grade" style="margin-left: 10px;" type="number" min="1" max="5" required> <br> <br> <br>
+        <button (click)="createComment()" style="margin-left:70px" class="button-accept">Create</button>
+        <button (click)="cancel()" style="margin-left: 10px" class="button-reject">Cancel</button>
+    </div>
+
+    <div *ngIf="flag4" style="margin-left: 250px; margin-top: 20px; width: 300px; height: 400px; background-color: darkslategrey;">
+        <br> <label style="margin-left: 10px; font-size: large; color: white;">Content:</label><br>
+        <textarea [(ngModel)]="feedback.Content" style="margin-left: 10px; width: 250px; height: 150px;"></textarea> <br><br>
+        <label style="margin-left: 10px; font-size: large; color: white;">Grade:</label><br>
+        <input  [(ngModel)]="feedback.Grade"  style="margin-left: 10px;" type="number" min="1" max="5" required> <br><br>
+        <label style="margin-left: 10px; font-size: large; color: white;">Private:</label><input  [(ngModel)]="feedback.IsPrivate" style="margin-left:5px;" type="checkbox">
+        <br> <br> <br>
+        <button (click)="createFeedback()" style="margin-left:70px" class="button-accept">Create</button>
+        <button (click)="cancel()" style="margin-left: 10px" class="button-reject">Cancel</button>
+    </div>
 </body>

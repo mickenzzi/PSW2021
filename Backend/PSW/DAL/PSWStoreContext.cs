@@ -10,7 +10,11 @@ namespace PSW.DAL
 
         public DbSet<User> User { get; set; }
 
+        public DbSet<Comment> Comment { get; set; }
+
         public DbSet<Term> Term { get; set; }
+
+        public DbSet<Feedback> Feedback { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
