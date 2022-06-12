@@ -36,6 +36,14 @@ namespace PSW.Controllers
             return Ok(_userService.GetAllUsers());
         }
 
+        [HttpGet("suspicious")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult GetSuspicousUsers()
+        {
+            return Ok(_userService.GetSuspiciousUsers());
+        }
+
+
         [HttpGet("{id}")]
         public IActionResult GetUserById([FromRoute] string id)
         {
@@ -61,6 +69,7 @@ namespace PSW.Controllers
         }
 
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult DeleteUser([FromQuery] string id)
         {
             User user = _userService.GetUserById(id);
@@ -75,9 +84,34 @@ namespace PSW.Controllers
         }
 
         [HttpPut]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult UpdateUser([FromBody] UserDTO userDTO)
         {
             if(_userService.UpdateUser(userDTO))
+            {
+                return Ok(new { message = "Success" });
+            }
+
+            return BadRequest(new { message = "Invalid id" });
+        }
+
+        [HttpPut("block/{id}")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult BlockUser([FromRoute] string id)
+        {
+            if (_userService.BlockUser(id))
+            {
+                return Ok(new { message = "Success" });
+            }
+
+            return BadRequest(new { message = "Invalid id" });
+        }
+
+        [HttpPut("unblock/{id}")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult UnblockUser([FromRoute] string id)
+        {
+            if (_userService.UnblockUser(id))
             {
                 return Ok(new { message = "Success" });
             }

@@ -37,12 +37,12 @@ namespace PSW.Service
             User doctor = _userRepository.GetUserById(term.DoctorId);
             if (!doctor.Specialization.Equals("GeneralPractitioner"))
             {
-                createReferral(term);
+                CreateReferral(term);
             }
             return _termRepository.Create(term);
         }
 
-        private void createReferral(Term term)
+        private void CreateReferral(Term term)
         {
             User doctor = _userRepository.GetUserById(term.DoctorId);
             User user = _userRepository.GetUserById(term.UserId);
@@ -68,7 +68,8 @@ namespace PSW.Service
             {
                 return false;
             }
-            _termRepository.Delete(term);
+            term.IsRejected = true;
+            _termRepository.Update(term);
             return true;
         }
 
@@ -90,6 +91,7 @@ namespace PSW.Service
                     termResponse.Id = t.Id;
                     termResponse.TermDoctor = _userRepository.GetUserById(t.DoctorId);
                     termResponse.TermUser = _userRepository.GetUserById(t.UserId);
+                    termResponse.IsRejected = t.IsRejected;
                     doctorTerms.Add(termResponse);
                 }
             }
@@ -109,6 +111,7 @@ namespace PSW.Service
                     termResponse.Id = t.Id;
                     termResponse.TermDoctor = _userRepository.GetUserById(t.DoctorId);
                     termResponse.TermUser = _userRepository.GetUserById(t.UserId);
+                    termResponse.IsRejected = t.IsRejected;
                     patientTerms.Add(termResponse);
                 }
             }
@@ -175,6 +178,7 @@ namespace PSW.Service
                 termResponse.Id = t.Id;
                 termResponse.TermUser = user;
                 termResponse.TermDoctor = doctor;
+                termResponse.IsRejected = t.IsRejected;
                 terms.Add(termResponse);
 
             }
@@ -188,7 +192,7 @@ namespace PSW.Service
             List<Term> terms = _termRepository.GetAll();
                 foreach (Term t in terms)
                 {
-                    if (t.DoctorId == doctorId && DateTime.Parse(t.DateTimeTerm) <= endDate && DateTime.Parse(t.DateTimeTerm) >= startDate)
+                    if (t.DoctorId == doctorId && DateTime.Parse(t.DateTimeTerm) <= endDate && DateTime.Parse(t.DateTimeTerm) >= startDate && !t.IsRejected)
                     {
                         return true;
                     }
@@ -205,7 +209,7 @@ namespace PSW.Service
             List<Term> usedTerms = new List<Term>();
             foreach(Term t in terms)
             {
-                if(DateTime.Parse(t.DateTimeTerm) >= termDTO.StartDate && DateTime.Parse(t.DateTimeTerm) <= termDTO.EndDate && t.DoctorId == termDTO.DoctorId )
+                if(DateTime.Parse(t.DateTimeTerm) >= termDTO.StartDate && DateTime.Parse(t.DateTimeTerm) <= termDTO.EndDate && t.DoctorId == termDTO.DoctorId && !t.IsRejected)
                 {
                     usedTerms.Add(t);
                 }
@@ -247,7 +251,7 @@ namespace PSW.Service
             foreach(Term t in allTerms)
             {
                 User usedDoctor = _userRepository.GetUserById(t.DoctorId);
-                if(usedDoctor.Specialization.Equals(requiredDoctor.Specialization) && DateTime.Parse(t.DateTimeTerm) >= termDTO.StartDate && DateTime.Parse(t.DateTimeTerm) <= termDTO.EndDate)
+                if(usedDoctor.Specialization.Equals(requiredDoctor.Specialization) && DateTime.Parse(t.DateTimeTerm) >= termDTO.StartDate && DateTime.Parse(t.DateTimeTerm) <= termDTO.EndDate && !t.IsRejected)
                 {
                     usedTerms.Add(t);
                 }

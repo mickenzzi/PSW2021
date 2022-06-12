@@ -8,7 +8,7 @@
 			<form class="login-form" (ngSubmit)="onSubmit()">
 				<input type="text" class="login-input" [(ngModel)]="form.username" placeholder="Username" [ngModelOptions]="{standalone: true}" required autofocus/>
 				<input type="password" class="login-input" [(ngModel)]="form.password" [ngModelOptions]="{standalone: true}" placeholder="Password" required autofocus/>
-                <label style="color:red" *ngIf="isLoginFailed"> {{errorMessage}}</label>
+                <label style="color:red" *ngIf="isLoginFailed"> {{errorMessage}}</label><br>
 				<button class="login-button">Sign in</button>
 			</form>
             <label style="font-size: medium; margin-left: 10%;">Don't have an account?<button (click)="goToRegistration()" class="registration-button">Register now!</button></label>

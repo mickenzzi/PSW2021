@@ -13,6 +13,8 @@ namespace PSW.DTO
         public User TermUser { get; set; }
         public User TermDoctor { get; set; }
 
+        public bool IsRejected { get; set; }
+
         public TermResponse() { }
     }
 }

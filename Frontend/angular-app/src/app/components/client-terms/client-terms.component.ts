@@ -56,15 +56,25 @@ export class ClientTermsComponent implements OnInit {
   }
 
   getPatientFutureTerms() {
+    this.futureTerms = [];
     this.termService.getAllPatientFutureTerms(this.currentUser.Id).subscribe(response => {
-      this.futureTerms = response;
+      for(let term of response){
+        if(!term.IsRejected){
+          this.futureTerms.push(term);
+        }
+      }
       this.flag1 = true;
     })
   }
 
   getPatientCompletedTerms() {
+    this.completedTerms = [];
     this.termService.getAllPatientCompletedTerms(this.currentUser.Id).subscribe(response => {
-      this.completedTerms = response;
+      for(let term of response){
+        if(!term.IsRejected){
+          this.completedTerms.push(term);
+        }
+      }
       this.flag2 = true;
     })
   }

@@ -45,20 +45,27 @@ export class HomeComponent implements OnInit {
 
     this.userService.login(data).subscribe(
       data => {
-        this.tokenStorage.saveToken(data.Token);
-        this.tokenStorage.saveUser(data.LoggedUser);
+        if (data.LoggedUser.IsBlocked) {
+          this.isLoginFailed = true;
+          this.errorMessage = "Your account is blocked."
+        }
+        else {
+          this.tokenStorage.saveToken(data.Token);
+          this.tokenStorage.saveUser(data.LoggedUser);
 
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.errorMessage = ""
-        if (data.LoggedUser.Role === "Client") {
-          this.router.navigate(['/client'])
-        }
-        else if (data.LoggedUser.Role === "Doctor") {
-          this.router.navigate(['/doctor'])
-        }
-        else if (data.LoggedUser.Role === "Admin"){
-          this.router.navigate(['/admin'])
+          this.isLoginFailed = false;
+          this.isLoggedIn = true;
+          this.errorMessage = ""
+          if (data.LoggedUser.Role === "Client") {
+            this.router.navigate(['/client'])
+          }
+          else if (data.LoggedUser.Role === "Doctor") {
+            this.router.navigate(['/doctor'])
+          }
+          else if (data.LoggedUser.Role === "Admin") {
+            this.router.navigate(['/admin'])
+
+          }
         }
       },
       err => {
@@ -79,11 +86,11 @@ export class HomeComponent implements OnInit {
         feedbackResponse.IsPrivate = feedback.IsPrivate;
         feedbackResponse.IsVisible = feedback.IsVisible;
         if (feedback.IsVisible) {
-          if(feedback.IsPrivate){
+          if (feedback.IsPrivate) {
             feedbackResponse.User = "Anonymous"
           }
-          else{
-            this.userService.getUserById(feedback.UserId ?? "").subscribe(response =>{
+          else {
+            this.userService.getUserById(feedback.UserId ?? "").subscribe(response => {
               feedbackResponse.User = response.Username;
             })
           }

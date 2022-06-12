@@ -60,8 +60,13 @@ export class DoctorComponent implements OnInit {
   }
 
   getDoctorTerms() {
+    this.terms = []
     this.termService.getAllDoctorTerms(this.currentUser.Id).subscribe(response => {
-      this.terms = response;
+      for(let term of response){
+        if(!term.IsRejected){
+          this.terms.push(term);
+        }
+      }
       this.flag1 = true;
     })
   }

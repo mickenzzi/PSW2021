@@ -6,4 +6,5 @@ export class TermResponse {
     DateTimeTerm?: string;
     TermDoctor?: Doctor;
     TermUser?: User;
+    IsRejected?: boolean;
 }

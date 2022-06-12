@@ -18,6 +18,8 @@ namespace PSW.Model
         public string DoctorId { get; set; }
         [Column("dateTime")]
         public string DateTimeTerm { get; set; }
+        [Column("rejected")]
+        public bool IsRejected { get; set; }
 
         public Term()
         {
@@ -30,6 +32,7 @@ namespace PSW.Model
             UserId = termDTO.UserId;
             DoctorId = termDTO.DoctorId;
             DateTimeTerm = termDTO.StartDate.ToString();
+            IsRejected = false;
         }
 
 

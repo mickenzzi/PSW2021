@@ -85,10 +85,12 @@
           <th class="header__item">Doctor</th>
           <th class="header__item">Select</th>
         </tr>
-        <tr *ngFor="let term of patientTerms" class="table-row">
+        <tr *ngFor="let term of patientTerms1" class="table-row">
           <td class="table-data">{{term.DateTimeTerm}}</td>
           <td class="table-data">{{term.TermDoctor?.FirstName}} {{term.TermDoctor?.LastName}}</td>
-          <td><button class="button-accept" (click)="selectTermForReject(term)">Select</button></td>
+          <td>
+            <label *ngIf="term.IsRejected">Rejected term</label>
+            <button class="button-accept" *ngIf="!term.IsRejected" (click)="selectTermForReject(term)">Select</button></td>
         </tr>
       </table>
       <br>
@@ -97,7 +99,7 @@
       <label style="color:red; margin-left: 70px;" *ngIf="isFailed"> {{errorMessage}}</label>
       <br>
       <br>
-      <button style="margin-left: 60px;" class="button-accept" (click)="rejectTerm(selectedTermForReject.Id)">Reject</button>
+      <button style="margin-left: 60px;" class="button-accept"(click)="rejectTerm(selectedTermForReject.Id)">Reject</button>
       <button class="button-reject" style="margin-left: 15px;" (click)="cancel()">Cancel</button>
     </div>
   </div>

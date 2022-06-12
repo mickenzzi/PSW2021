@@ -54,6 +54,9 @@ namespace PSW.Model
         [Column("specialization")]
         public string Specialization { get; set; }
 
+        [Column("blocked")]
+        public bool IsBlocked { get; set; }
+
         public User()
         {
             Id = "user_" + Guid.NewGuid();
@@ -71,6 +74,7 @@ namespace PSW.Model
             Country = userDTO.Country;
             PhoneNumber = userDTO.PhoneNumber;
             Specialization = "None";
+            IsBlocked = false;
         }
 
     }

@@ -25,4 +25,16 @@ export class UserService {
   public getUserById(id: string) : Observable<any> {
     return this.http.get(`${this.userUrl}/${id}`)
   }
+
+  public getSuspiciousUser() : Observable<any> {
+    return this.http.get(`${this.userUrl}/suspicious`)
+  }
+
+  public blockUser(id: string) : Observable<any> {
+    return this.http.put(`${this.userUrl}/block/${id}`, null)
+  }
+
+  public unblockUser(id: string) : Observable<any> {
+    return this.http.put(`${this.userUrl}/unblock/${id}`, null)
+  }
 }

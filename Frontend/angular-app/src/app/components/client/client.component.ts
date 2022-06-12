@@ -30,6 +30,7 @@ export class ClientComponent implements OnInit {
   currentUser: User = new User();
 
   patientTerms: TermResponse[] = [];
+  patientTerms1: TermResponse[] = [];
 
   //create term form
   flag1: boolean = false;
@@ -151,8 +152,14 @@ export class ClientComponent implements OnInit {
   }
 
   getPatientTerms() {
+    this.patientTerms1 = [];
     this.termService.getAllPatientTerms(this.currentUser.Id).subscribe(response => {
       this.patientTerms = response;
+      for(let term of this.patientTerms){
+        if(!term.IsRejected){
+          this.patientTerms1.push(term);
+        }
+      }
     })
   }
 
