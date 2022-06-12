@@ -23,7 +23,6 @@ namespace PSW.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAllFeedbacks()
         {
             return Ok(_feedbackService.GetAllFeedbacks());

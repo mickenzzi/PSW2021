@@ -42,6 +42,7 @@ namespace PSW.Service
             feedback.Content = newFeedback.Content;
             feedback.Grade = newFeedback.Grade;
             feedback.IsPrivate = newFeedback.IsPrivate;
+            feedback.IsVisible = newFeedback.IsVisible;
             return _feedbackRepository.Update(feedback);
         }
 

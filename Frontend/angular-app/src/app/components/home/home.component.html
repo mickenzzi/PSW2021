@@ -1,4 +1,5 @@
-<body style="background-color: whitesmoke;">
+<body >
+	<button  style="margin-top: 20px; margin-left: 550px; border:none; background-color: transparent; color:blue; font-size: larger; font-weight: bold;" (click)="showFeedbacks()">Feedbacks</button>
     <div class="login-container">
 		<section class="login" id="login">
 			<header>
@@ -13,4 +14,22 @@
             <label style="font-size: medium; margin-left: 10%;">Don't have an account?<button (click)="goToRegistration()" class="registration-button">Register now!</button></label>
 		</section>
 	</div>
+
+	<div *ngIf="flag1"
+	style="margin-left: 300px; margin-top: 50px; background-color:darkslategrey; width: 600px; height: 300px;">
+	<br>
+	<table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
+		<tr class="table-header">
+			<th class="header__item">User</th>
+			<th class="header__item">Content</th>
+			<th class="header__item">Grade</th>
+		</tr>
+		<tr *ngFor="let feedback of feedbacks" class="table-row">
+			<td class="table-data">{{feedback.User}}</td>
+			<td class="table-data">{{feedback.Content}}</td>
+			<td class="table-data">{{feedback.Grade}}</td>
+		</tr>
+	</table>
+</div>
+<br><br><br>
 </body>

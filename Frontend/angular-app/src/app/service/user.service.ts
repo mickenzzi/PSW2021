@@ -21,4 +21,8 @@ export class UserService {
   public registration(request: RegistrationRequest) : Observable<any> {
     return this.http.post(`${this.userUrl}/registration`, request)
   }
+
+  public getUserById(id: string) : Observable<any> {
+    return this.http.get(`${this.userUrl}/${id}`)
+  }
 }

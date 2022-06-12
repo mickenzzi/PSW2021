@@ -1,8 +1,8 @@
-export class Feedback {
+export class FeedbackResponse {
     Id?: string;
     Content?: string;
     Grade?: number;
-    UserId?: string;
+    User?: string;
     IsPrivate?: boolean;
     IsVisible?: boolean;
 }

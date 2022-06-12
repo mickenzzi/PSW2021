@@ -12,6 +12,7 @@ import { ClientComponent } from './components/client/client.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DoctorComponent } from './components/doctor/doctor.component';
 import { ClientTermsComponent } from './components/client-terms/client-terms.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ClientTermsComponent } from './components/client-terms/client-terms.com
     RegistrationComponent,
     ClientComponent,
     DoctorComponent,
-    ClientTermsComponent
+    ClientTermsComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import { HomeComponent } from './components/home/home.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { ClientTermsComponent } from './components/client-terms/client-terms.component';
 import { DoctorComponent } from './components/doctor/doctor.component';
+import { AdminComponent } from './components/admin/admin.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,8 @@ const routes: Routes = [
     component: HomeComponent,
     pathMatch: 'full'
   },
-  { path: 'registration',
+  { 
+    path: 'registration',
     component: RegistrationComponent
   },
   { path: 'client',
@@ -22,8 +24,13 @@ const routes: Routes = [
     path: 'doctor',
     component: DoctorComponent
   },
-  { path: 'clientTerms',
+  { 
+    path: 'clientTerms',
     component: ClientTermsComponent
+  },
+  {
+    path: 'admin',
+    component: AdminComponent
   }
 ];
 

@@ -26,6 +26,9 @@ namespace PSW.Model
         [Column("private")]
         public bool IsPrivate { get; set; }
 
+        [Column("visible")]
+        public bool IsVisible { get; set; }
+
         public Feedback()
         {
             Id = "feedback_" + Guid.NewGuid();
@@ -39,6 +42,7 @@ namespace PSW.Model
             Grade = newFeedback.Grade;
             UserId = newFeedback.UserId;
             IsPrivate = newFeedback.IsPrivate;
+            IsVisible = false;
         }
     }
 }

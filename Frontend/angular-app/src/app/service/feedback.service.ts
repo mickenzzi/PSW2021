@@ -15,4 +15,12 @@ export class FeedbackService {
     return this.http.post(`${this.feedbackUrl}`, feedback)
   }
 
+  public getAllFeedbacks() : Observable<any> {
+    return this.http.get(`${this.feedbackUrl}`)
+  }
+
+  public updateFeedback(feedback: Feedback): Observable<any> {
+    return this.http.put(`${this.feedbackUrl}`, feedback)
+  }
+
 }

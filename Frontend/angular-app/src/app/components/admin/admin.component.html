@@ -1,0 +1,28 @@
+<body style="background-color: whitesmoke;">
+    <button class="button-reject" (click)="signout()" style="margin-left: 30px; margin-top: 30px;">Sign out</button>
+    <button (click)="showFeedbacks()"
+    style="margin-top: 20px; margin-left: 350px; border:none; background-color: transparent; color:blue; font-size: larger; font-weight: bold;">Feedbacks</button>
+    <button 
+    style="margin-top: 20px; margin-left: 30px; border:none; background-color: transparent; color:blue; font-size: larger; font-weight: bold;">Users</button>
+    <br>
+    <div *ngIf="flag1"
+	style="margin-left: 300px; margin-top: 50px; background-color:darkslategrey; width: 600px; height: 300px;">
+	<br>
+	<table class="table" style="margin-left: 10px; height: 200px; display: block; overflow: auto;">
+		<tr class="table-header">
+			<th class="header__item">User</th>
+			<th class="header__item">Content</th>
+			<th class="header__item">Grade</th>
+            <th class="header__item">Visible</th>
+            <th class="header__item">Set visibility</th>
+		</tr>
+		<tr *ngFor="let feedback of feedbacks" class="table-row">
+			<td class="table-data">{{feedback.UserId}}</td>
+			<td class="table-data">{{feedback.Content}}</td>
+			<td class="table-data">{{feedback.Grade}}</td>
+            <td class="table-data">{{feedback.IsVisible}}</td>
+            <td class="table-data"><button class="button-accept" (click)="setFeedbackVisible(feedback)">Visible</button><button class="button-accept" (click)="setFeedbackInvisible(feedback)">Invisible</button></td>
+		</tr>
+	</table>
+</div>
+</body>
