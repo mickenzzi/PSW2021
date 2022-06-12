@@ -9,6 +9,7 @@ import { User } from 'src/app/model/user';
 import { DoctorService } from 'src/app/service/doctor.service';
 import { TermService } from 'src/app/service/term.service';
 import { TokenStorageService } from 'src/app/service/token-storage.service';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-doctor',
@@ -25,6 +26,9 @@ export class DoctorComponent implements OnInit {
   termRequest: TermRequest = new TermRequest();
   selectedDoctor: Doctor = new Doctor();
 
+  drugsName: string = "";
+  drugsQuantity: number = 0;
+
   doctorPriority: boolean = false;
 
   //show doctor terms
@@ -33,10 +37,11 @@ export class DoctorComponent implements OnInit {
   flag2: boolean = false;
   //show finally reservation
   flag3: boolean = false;
+  flag4: boolean = false;
   isFailed: boolean = false;
   errorMessage: string = "";
 
-  constructor(private termService: TermService, private auth: TokenStorageService, private router: Router, private doctorService: DoctorService) { }
+  constructor(private termService: TermService, private userService: UserService, private auth: TokenStorageService, private router: Router, private doctorService: DoctorService) { }
 
   ngOnInit(): void {
     if (this.auth.getToken() == null) {
@@ -96,6 +101,7 @@ export class DoctorComponent implements OnInit {
       this.flag1 = false;
       this.flag2 = false;
       this.flag3 = false;
+      this.flag4 = false;
       this.selectedTerm = new Term();
       this.selectedTerm1 = new Term();
       this.selectedDoctor = new Doctor();
@@ -127,6 +133,9 @@ export class DoctorComponent implements OnInit {
   cancel() {
     this.flag2 = false;
     this.isFailed = false;
+    this.flag4 = false;
+    this.drugsName = "";
+    this.drugsQuantity = 0;
     this.termRequest = new TermRequest();
     this.selectedDoctor = new Doctor();
     this.selectedTerm = new Term();
@@ -199,5 +208,26 @@ export class DoctorComponent implements OnInit {
     this.flag1 = true;
     this.isFailed = false;
     this.selectedTerm1 = new Term();
+  }
+
+  showDrugs() {
+    this.flag4 = true;
+    this.flag1 = false;
+  }
+
+  shareDrugs() {
+    if(this.drugsName.length === 0 || this.drugsQuantity === 0){
+      alert("Invalid data.");
+    }
+    else{
+      this.userService.shareDrugs(this.drugsName, this.drugsQuantity).subscribe( response => {
+        alert("You are successfully transfer drugs from pharmacy to our hospital.")
+        this.flag4 = false;
+        this.drugsName = "";
+        this.drugsQuantity = 0;
+      }, (error: HttpErrorResponse)=>{
+        alert("There is no more searched drugs in pharmacy.")
+      })
+    }
   }
 }

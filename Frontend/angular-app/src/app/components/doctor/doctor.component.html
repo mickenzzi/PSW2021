@@ -3,6 +3,8 @@
     <br>
     <button (click)="showTerms()"
         style="font-size: large; margin-left: 45%; color: blue; border: none; background-color: transparent;">Terms</button>
+        <button (click)="showDrugs()"
+        style="font-size: large; margin-left: 10px; color: blue; border: none; background-color: transparent;">Drugs</button>
     <div *ngIf="flag1"
         style="margin-left: 20px; margin-top: 20px; background-color:darkslategrey; width: 600px; height: 400px; position: fixed;">
         <br>
@@ -89,5 +91,17 @@
       <button style="margin-left: 60px;" class="button-accept" (click)="createTerm()">Reserve</button>
       <button class="button-reject" style="margin-left: 15px;" (click)="cancelReservation()">Cancel</button>
     </div>
+
+    <div *ngIf="flag4" style="margin-left: 20px; margin-top: 20px; background-color:darkslategrey; width: 300px; height: 200px; position: fixed;">
+    <br>
+    <input style="margin-left: 10px;" type="text" [(ngModel)]="drugsName" placeholder="Drugs name"><br><br>
+    <input style="margin-left: 10px;" type="number" min="1" max="100" [(ngModel)]="drugsQuantity" placeholder="Drugs name"><br> 
+    <br>
+    <br>
+    <button style="margin-left:50px" class="button-accept" (click)="shareDrugs()" >Search</button>
+    <button class="button-reject" style="margin-left:10px" (click)="cancel()">Cancel</button>
+    <br>
+    <br>
+</div>
 
 </body>

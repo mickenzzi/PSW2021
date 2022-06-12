@@ -1,23 +1,27 @@
-﻿using PSW.DTO;
+﻿using Grpc.Net.Client;
+using PSW.DTO;
 using PSW.Model;
+using PSW.Protos;
 using PSW.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using WinSCP;
+using System.Threading.Tasks;
 
 namespace PSW.Service
 {
     public class UserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMedicineRepository _medicineRepository;
         private readonly TermService _termService;
 
-        public UserService(IUserRepository userRepository, TermService termService)
+        public UserService(IUserRepository userRepository, IMedicineRepository medicineRepository, TermService termService)
         {
             _userRepository = userRepository;
             _termService = termService;
+            _medicineRepository = medicineRepository;
         }
 
         public List<User> GetAllUsers()
@@ -30,7 +34,7 @@ namespace PSW.Service
             List<User> users = _userRepository.GetAll();
             List<User> clients = new List<User>();
             List<SuspiciousUser> suspciousUsers = new List<SuspiciousUser>();
-            foreach(User u in users)
+            foreach (User u in users)
             {
                 if (u.Role.Equals("Client"))
                 {
@@ -38,7 +42,7 @@ namespace PSW.Service
                 }
             }
 
-            foreach(User u in clients)
+            foreach (User u in clients)
             {
                 SuspiciousUser user = new SuspiciousUser();
                 user.Id = u.Id;
@@ -58,9 +62,9 @@ namespace PSW.Service
             DateTime start = new DateTime(now.Year, now.Month, 1);
             DateTime end = start.AddMonths(1).AddDays(-1);
             List<TermResponse> rejectedTerms = new List<TermResponse>();
-            foreach(TermResponse t in terms)
+            foreach (TermResponse t in terms)
             {
-                if(DateTime.Parse(t.DateTimeTerm)>= start && DateTime.Parse(t.DateTimeTerm) <= end && t.IsRejected)
+                if (DateTime.Parse(t.DateTimeTerm) >= start && DateTime.Parse(t.DateTimeTerm) <= end && t.IsRejected)
                 {
                     rejectedTerms.Add(t);
                 }
@@ -82,7 +86,7 @@ namespace PSW.Service
         public bool UpdateUser(UserDTO userDTO)
         {
             User user = _userRepository.GetUserById(userDTO.Id);
-            if(user == null)
+            if (user == null)
             {
                 return false;
             }
@@ -126,11 +130,47 @@ namespace PSW.Service
             return _userRepository.GetUserByUsername(username);
         }
 
+        public bool ShareDrugsFromPharmacy(String name, int quantity)
+        {
+            Task<Medicine> result = ShareDrugs(name, quantity);
+            Medicine medicine = result.Result;
+            Medicine medicine1 = _medicineRepository.GetMedicineById(medicine.Id);
+            if (medicine.Name != "Empty")
+            {
+                if (medicine1 != null)
+                {
+                    medicine1.Quantity = medicine1.Quantity + quantity;
+                    _medicineRepository.Update(medicine1);
+                }
+                else
+                {
+                    medicine.Quantity = quantity;
+                    _medicineRepository.Create(medicine);
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+        }
+
         public User GetUserByLoginCredentials(UserLoginRequestDTO userDTO)
         {
             User user = _userRepository.GetAll().SingleOrDefault(u => u.Username == userDTO.Username && u.Password == userDTO.Password);
             return user;
         }
 
+        private static async Task<Medicine> ShareDrugs(string name, int quantity)
+        {
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            var client = new Greeter.GreeterClient(channel);
+            var reply = await client.ShareMedicineAsync(new MedicineRequest { Name = name, Quantity = quantity });
+            Medicine medicine = new Medicine();
+            medicine.Id = reply.Id;
+            medicine.Name = reply.Name;
+            medicine.Dose = reply.Dose;
+            return medicine;
+        }
     }
 }

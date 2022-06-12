@@ -81,6 +81,7 @@ namespace PSW
             services.AddScoped<ITermRepository, TermRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+            services.AddScoped<IMedicineRepository, MedicineRepository>();
             //Services
             services.AddTransient<UserService>();
             services.AddTransient<DoctorService>();

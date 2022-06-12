@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "Pharmacy";
+
+package greet;
+
+service Greeter {
+  rpc ShareMedicine (MedicineRequest) returns (MedicineResponse);
+}
+
+message MedicineRequest {
+	int32 quantity = 1;
+	string name = 2;
+}
+
+message MedicineResponse {
+	string id = 1;
+	string name = 2;
+	int32 dose = 3;
+	int32 quantity = 4;
+}

@@ -30,6 +30,10 @@ export class UserService {
     return this.http.get(`${this.userUrl}/suspicious`)
   }
 
+  public shareDrugs(name: string, quantity: number) : Observable<any> {
+    return this.http.get(`${this.userUrl}/drugs/${name}/${quantity}`)
+  }
+
   public blockUser(id: string) : Observable<any> {
     return this.http.put(`${this.userUrl}/block/${id}`, null)
   }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Grpc.Net.Client;
 using IronPdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,19 @@ namespace PSW.Controllers
         public IActionResult GetSuspicousUsers()
         {
             return Ok(_userService.GetSuspiciousUsers());
+        }
+
+        [HttpGet("drugs/{name}/{quantity}")]
+        public IActionResult ShareDrugsFromPharmacy([FromRoute] string name, [FromRoute] int quantity)
+        {
+            if (_userService.ShareDrugsFromPharmacy(name, quantity))
+            {
+                return Ok(new { message = "Success" });
+            }
+            else
+            {
+                return BadRequest(new { message = "Invalid data." });
+            }
         }
 
 
