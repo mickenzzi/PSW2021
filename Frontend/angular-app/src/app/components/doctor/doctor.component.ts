@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Doctor } from 'src/app/model/doctor';
+import { Recipe } from 'src/app/model/recipe';
 import { Term } from 'src/app/model/term';
 import { TermRequest } from 'src/app/model/term-request';
 import { TermResponse } from 'src/app/model/term-response';
@@ -25,6 +26,7 @@ export class DoctorComponent implements OnInit {
   selectedTerm1: Term = new Term();
   termRequest: TermRequest = new TermRequest();
   selectedDoctor: Doctor = new Doctor();
+  recipe: Recipe = new Recipe();
 
   drugsName: string = "";
   drugsQuantity: number = 0;
@@ -38,6 +40,7 @@ export class DoctorComponent implements OnInit {
   //show finally reservation
   flag3: boolean = false;
   flag4: boolean = false;
+  flag5: boolean = false;
   isFailed: boolean = false;
   errorMessage: string = "";
 
@@ -67,8 +70,8 @@ export class DoctorComponent implements OnInit {
   getDoctorTerms() {
     this.terms = []
     this.termService.getAllDoctorTerms(this.currentUser.Id).subscribe(response => {
-      for(let term of response){
-        if(!term.IsRejected){
+      for (let term of response) {
+        if (!term.IsRejected) {
           this.terms.push(term);
         }
       }
@@ -77,7 +80,7 @@ export class DoctorComponent implements OnInit {
   }
 
   selectTerm(term: TermResponse) {
-    if(this.flag2){
+    if (this.flag2) {
       this.flag2 = false;
     }
     else {
@@ -89,6 +92,27 @@ export class DoctorComponent implements OnInit {
     this.selectedTerm.DateTimeTerm = term.DateTimeTerm;
   }
 
+  showRecipe(term: TermResponse) {
+    this.flag4 = false;
+    this.flag1 = false;
+    this.flag5 = true;
+    this.recipe.Patient = term.TermUser?.FirstName + " " + term.TermUser?.LastName;
+    this.recipe.Doctor = term.TermDoctor?.FirstName + " " + term.TermDoctor?.LastName;
+  }
+
+  createRecipe() {
+    if (this.recipe.Dose === 0 || this.recipe.Medicine.length === 0) {
+      alert("Invalid data.");
+    }
+    else {
+      this.doctorService.createRecipe(this.recipe).subscribe(response => {
+        this.flag5 = false;
+        this.recipe = new Recipe();
+        alert("You are successfully create recipe.")
+      })
+    }
+  }
+
   selectTerm1(term: TermResponse) {
     this.selectedTerm1.Id = term.Id;
     this.selectedTerm1.UserId = term.TermUser?.Id;
@@ -96,28 +120,29 @@ export class DoctorComponent implements OnInit {
     this.selectedTerm1.DateTimeTerm = term.DateTimeTerm;
   }
 
-  showTerms(){
-    if(this.flag1) {
+  showTerms() {
+    this.flag4 = false;
+    this.flag5 = false;
+    if (this.flag1) {
       this.flag1 = false;
       this.flag2 = false;
       this.flag3 = false;
-      this.flag4 = false;
       this.selectedTerm = new Term();
       this.selectedTerm1 = new Term();
       this.selectedDoctor = new Doctor();
     }
     else {
-    this.getDoctorTerms();
+      this.getDoctorTerms();
     }
   }
 
   deleteTerm(id: string) {
-      this.termService.delete(id).subscribe(response => {
-        alert("You are successfully delete term.");
-        this.getDoctorTerms();
-      }, (error: HttpErrorResponse) => {
-        alert("You can't delete future terms.")
-      })
+    this.termService.delete(id).subscribe(response => {
+      alert("You are successfully delete term.");
+      this.getDoctorTerms();
+    }, (error: HttpErrorResponse) => {
+      alert("You can't delete future terms.")
+    })
   }
 
   getSpecialistDoctor() {
@@ -134,6 +159,8 @@ export class DoctorComponent implements OnInit {
     this.flag2 = false;
     this.isFailed = false;
     this.flag4 = false;
+    this.flag5 = false;
+    this.recipe = new Recipe();
     this.drugsName = "";
     this.drugsQuantity = 0;
     this.termRequest = new TermRequest();
@@ -211,21 +238,27 @@ export class DoctorComponent implements OnInit {
   }
 
   showDrugs() {
-    this.flag4 = true;
+    if (this.flag4) {
+      this.flag4 = false;
+    }
+    else {
+      this.flag4 = true;
+    }
     this.flag1 = false;
+    this.flag5 = false;
   }
 
   shareDrugs() {
-    if(this.drugsName.length === 0 || this.drugsQuantity === 0){
+    if (this.drugsName.length === 0 || this.drugsQuantity === 0) {
       alert("Invalid data.");
     }
-    else{
-      this.userService.shareDrugs(this.drugsName, this.drugsQuantity).subscribe( response => {
+    else {
+      this.userService.shareDrugs(this.drugsName, this.drugsQuantity).subscribe(response => {
         alert("You are successfully transfer drugs from pharmacy to our hospital.")
         this.flag4 = false;
         this.drugsName = "";
         this.drugsQuantity = 0;
-      }, (error: HttpErrorResponse)=>{
+      }, (error: HttpErrorResponse) => {
         alert("There is no more searched drugs in pharmacy.")
       })
     }

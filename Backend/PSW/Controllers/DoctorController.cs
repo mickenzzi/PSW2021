@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PSW.DTO;
 using PSW.Model;
 using PSW.Service;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
@@ -53,6 +54,15 @@ namespace PSW.Controllers
             if (doctor == null)
                 return BadRequest(new { message = "Invalid id" });
             return Ok(doctor);
+        }
+
+
+        [HttpPost("recipe")]
+        [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult CreateRecipe([FromBody] RecipeDTO recipeDTO)
+        {
+            _doctorService.CreateRecipe(recipeDTO);
+            return Ok(new { message = "Success" });
         }
     }
 }
