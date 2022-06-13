@@ -70,10 +70,10 @@ namespace PSW.Service
             ChromePdfRenderer render = new ChromePdfRenderer();
             PdfDocument pdf = render.RenderHtmlAsPdf(html);
             pdf.SaveAs(@"C:\Users\HP\Desktop\PSW\PSW2021\Backend\recipes\" + id + ".pdf");
-            shareFiles();
+            shareFiles(1);
         }
 
-        private void shareFiles()
+        private void shareFiles(int transferOption)
         {
             try
             {
@@ -100,8 +100,13 @@ namespace PSW.Service
                     };
 
                     TransferOperationResult transferResult;
-                    transferResult = session.PutFiles(@"C:\Users\HP\Desktop\PSW\PSW2021\Backend\recipes\*.pdf", "/public/", false, transferOptions);
-
+                    if (transferOption == 1)
+                    {
+                        transferResult = session.PutFiles(@"C:\Users\HP\Desktop\PSW\PSW2021\Backend\recipes\*.pdf", "/public/", false, transferOptions);
+                    } else
+                    {
+                        transferResult = session.GetFiles(@"\public\*.pdf", @"C:\Users\HP\Downloads\RebexTinySftpServer-Binaries-Latest\local\*.pdf", false, transferOptions);
+                    }
                     // Throw on any error
                     transferResult.Check();
                 }
