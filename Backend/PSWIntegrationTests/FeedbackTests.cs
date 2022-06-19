@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
 using PSW;
+using PSW.Model;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using Newtonsoft.Json;
-using Shouldly;
-using System.Collections.Generic;
-using PSW.Model;
 
 namespace PSWIntegrationTests
 {
@@ -28,7 +25,7 @@ namespace PSWIntegrationTests
                 HandleCookies = true
             };
 
-            var client = _factory.CreateClient(clientOptions);
+            HttpClient client = _factory.CreateClient(clientOptions);
             return client;
 
         }
@@ -42,22 +39,39 @@ namespace PSWIntegrationTests
         [Theory]
         [InlineData("/feedbacks", "OK")]
         [InlineData("/feedbacks/1", "OK")]
-        public async Task Get_http_request(string url, string expectedStatusCode)
+        public async Task Get_Http_Request(string url, string expectedStatusCode)
         {
-            var client = createClient();
+            HttpClient client = createClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1hamEiLCJuYmYiOjE2NTUzMjI0NTEsImV4cCI6MTY1NTMyNjA1MSwiaWF0IjoxNjU1MzIyNDUxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDM0MSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMCJ9.a24bTPQaUv2htFt9De_kO97xlmJiK5dTHBBXNT5Zw3A");
-            var response = await client.GetAsync(url);
-            Console.Out.Write(response.Content);
+            HttpResponseMessage response = await client.GetAsync(url);
             Assert.Equal(expectedStatusCode, response.StatusCode.ToString());
         }
 
         [Theory]
         [InlineData("/feedbacks/1", "Unauthorized")]
-        public async Task Get_http_request_401(string url, string expectedStatusCode)
+        public async Task Get_Http_Request_401(string url, string expectedStatusCode)
         {
-            var client = createClient();
-            var response = await client.GetAsync(url);
-            Console.Out.Write(response.Content);
+            HttpClient client = createClient();
+            HttpResponseMessage response = await client.GetAsync(url);
+            Assert.Equal(expectedStatusCode, response.StatusCode.ToString());
+        }
+
+        [Theory]
+        [InlineData("/feedbacks", "OK")]
+        public async Task Create_Feedback_Successfully(string url, string expectedStatusCode)
+        {
+            HttpClient client = createClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1hamEiLCJuYmYiOjE2NTUzMjI0NTEsImV4cCI6MTY1NTMyNjA1MSwiaWF0IjoxNjU1MzIyNDUxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDM0MSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMCJ9.a24bTPQaUv2htFt9De_kO97xlmJiK5dTHBBXNT5Zw3A");
+            Feedback feedback = new Feedback
+            {
+                Id = "1",
+                Grade = 3,
+                Content = "Comment",
+                UserId = "1",
+                IsPrivate = false,
+                IsVisible = true
+            };
+            HttpResponseMessage response = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(feedback), Encoding.UTF8, "application/json"));
             Assert.Equal(expectedStatusCode, response.StatusCode.ToString());
         }
 
