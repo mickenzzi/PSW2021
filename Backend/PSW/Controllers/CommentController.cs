@@ -35,7 +35,10 @@ namespace PSW.Controllers
         {
             Comment comment = _commentService.GetCommentById(id);
             if (comment == null)
+            {
                 return BadRequest(new { message = "Invalid id" });
+            }
+
             return Ok(comment);
         }
 

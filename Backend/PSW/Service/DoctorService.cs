@@ -103,7 +103,8 @@ namespace PSW.Service
                     if (transferOption == 1)
                     {
                         transferResult = session.PutFiles(@"C:\Users\HP\Desktop\PSW\PSW2021\Backend\recipes\*.pdf", "/public/", false, transferOptions);
-                    } else
+                    }
+                    else
                     {
                         transferResult = session.GetFiles(@"\public\*.pdf", @"C:\Users\HP\Downloads\RebexTinySftpServer-Binaries-Latest\local\*.pdf", false, transferOptions);
                     }

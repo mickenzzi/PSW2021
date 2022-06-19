@@ -2,11 +2,9 @@
 using PSW.Model;
 using PSW.Repository.Interface;
 using PSW.Service;
-using System;
-using Xunit;
-using System.Collections.Generic;
 using Shouldly;
-using PSW.DTO;
+using System.Collections.Generic;
+using Xunit;
 
 namespace PSW.UnitTests
 {
@@ -22,27 +20,27 @@ namespace PSW.UnitTests
 
 
         [Fact]
-        public void Get_specialist_doctors()
+        public void Get_Specialist_Doctors()
         {
-            var doctorRepository = CreateDoctorRepository();
+            Mock<IUserRepository> doctorRepository = CreateDoctorRepository();
             DoctorService service = new DoctorService(doctorRepository.Object);
-            var doctors = service.GetAllSpecialist();
+            List<User> doctors = service.GetAllSpecialist();
             doctors.ShouldNotBe(null);
         }
 
         [Fact]
-        public void Get_non_specialist_doctors()
+        public void Get_Non_Specialist_Doctors()
         {
-            var doctorRepository = CreateDoctorRepository();
+            Mock<IUserRepository> doctorRepository = CreateDoctorRepository();
             DoctorService service = new DoctorService(doctorRepository.Object);
-            var doctors = service.GetAllNonSpecialist();
+            List<User> doctors = service.GetAllNonSpecialist();
             doctors.ShouldNotBe(null);
         }
 
         private static Mock<IUserRepository> CreateDoctorRepository()
         {
-            var stubRepository = new Mock<IUserRepository>();
-            var doctors = new List<User>();
+            Mock<IUserRepository> stubRepository = new Mock<IUserRepository>();
+            List<User> doctors = new List<User>();
             User doctor = CreateSpecialist("jovan");
             User nonSpecialist = CreateNonSpecialist("ivan");
             doctors.Add(doctor);
@@ -55,37 +53,41 @@ namespace PSW.UnitTests
 
         private static User CreateSpecialist(string doctor)
         {
-            User user = new User();
-            user.Id = doctor;
-            user.FirstName = "name";
-            user.LastName = "surname";
-            user.Username = "username";
-            user.Password = "password";
-            user.Role = User.UserRole.Doctor.ToString();
-            user.DateOfBirth = "birthday";
-            user.Address = "address";
-            user.Country = "country";
-            user.PhoneNumber = "phone";
-            user.Specialization = "Oncology";
-            user.IsBlocked = false;
+            User user = new User
+            {
+                Id = doctor,
+                FirstName = "name",
+                LastName = "surname",
+                Username = "username",
+                Password = "password",
+                Role = User.UserRole.Doctor.ToString(),
+                DateOfBirth = "birthday",
+                Address = "address",
+                Country = "country",
+                PhoneNumber = "phone",
+                Specialization = "Oncology",
+                IsBlocked = false
+            };
             return user;
         }
 
         private static User CreateNonSpecialist(string doctor)
         {
-            User user = new User();
-            user.Id = doctor;
-            user.FirstName = "name";
-            user.LastName = "surname";
-            user.Username = "username";
-            user.Password = "password";
-            user.Role = User.UserRole.Doctor.ToString();
-            user.DateOfBirth = "birthday";
-            user.Address = "address";
-            user.Country = "country";
-            user.PhoneNumber = "phone";
-            user.Specialization = "GeneralPractitioner";
-            user.IsBlocked = false;
+            User user = new User
+            {
+                Id = doctor,
+                FirstName = "name",
+                LastName = "surname",
+                Username = "username",
+                Password = "password",
+                Role = User.UserRole.Doctor.ToString(),
+                DateOfBirth = "birthday",
+                Address = "address",
+                Country = "country",
+                PhoneNumber = "phone",
+                Specialization = "GeneralPractitioner",
+                IsBlocked = false
+            };
             return user;
         }
     }

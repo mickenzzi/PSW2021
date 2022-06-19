@@ -52,7 +52,10 @@ namespace PSW.Controllers
         {
             User doctor = _userService.GetUserById(id);
             if (doctor == null)
+            {
                 return BadRequest(new { message = "Invalid id" });
+            }
+
             return Ok(doctor);
         }
 

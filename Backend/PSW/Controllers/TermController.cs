@@ -29,13 +29,13 @@ namespace PSW.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult GetAvailableTerms([FromBody] TermDTO termDTO)
         {
-            DateTime start = new DateTime(termDTO.StartDate.Year,termDTO.StartDate.Month,termDTO.StartDate.Day,8,0,0);
+            DateTime start = new DateTime(termDTO.StartDate.Year, termDTO.StartDate.Month, termDTO.StartDate.Day, 8, 0, 0);
             DateTime end = new DateTime(termDTO.StartDate.Year, termDTO.StartDate.Month, termDTO.StartDate.Day, 19, 0, 0);
             if (termDTO.StartDate < start || termDTO.StartDate > end)
             {
                 return BadRequest(new { message = "Worktime is 08:00-20:00" });
             }
-            else if(termDTO.StartDate.Minute != 0)
+            else if (termDTO.StartDate.Minute != 0)
             {
                 return BadRequest(new { message = "You can reserve term only at full hours." });
             }

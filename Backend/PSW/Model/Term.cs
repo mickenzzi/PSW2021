@@ -26,7 +26,7 @@ namespace PSW.Model
             Id = "term_" + Guid.NewGuid();
         }
 
-        public Term(TermDTO termDTO) 
+        public Term(TermDTO termDTO)
         {
             Id = "term_" + Guid.NewGuid();
             UserId = termDTO.UserId;

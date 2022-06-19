@@ -10,7 +10,7 @@ namespace PSW.DTO
         public string DoctorId { get; set; }
         public bool DoctorPriority { get; set; }
 
-        public TermDTO(){}
+        public TermDTO() { }
 
     }
 }

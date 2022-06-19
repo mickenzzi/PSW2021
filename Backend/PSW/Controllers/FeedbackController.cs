@@ -34,7 +34,10 @@ namespace PSW.Controllers
         {
             Feedback feedback = _feedbackService.GetFeedbackById(id);
             if (feedback == null)
+            {
                 return BadRequest(new { message = "Invalid id" });
+            }
+
             return Ok(feedback);
         }
 

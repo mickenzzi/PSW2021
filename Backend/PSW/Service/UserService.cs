@@ -5,7 +5,6 @@ using PSW.Protos;
 using PSW.Repository.Interface;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,13 +43,15 @@ namespace PSW.Service
 
             foreach (User u in clients)
             {
-                SuspiciousUser user = new SuspiciousUser();
-                user.Id = u.Id;
-                user.FirstName = u.FirstName;
-                user.LastName = u.LastName;
-                user.Username = u.Username;
-                user.IsBlocked = u.IsBlocked;
-                user.RejectsNumber = FindRejectNumber(_termService.GetAllPatientTerms(u.Id));
+                SuspiciousUser user = new SuspiciousUser
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Username = u.Username,
+                    IsBlocked = u.IsBlocked,
+                    RejectsNumber = FindRejectNumber(_termService.GetAllPatientTerms(u.Id))
+                };
                 suspciousUsers.Add(user);
             }
             return suspciousUsers;
@@ -130,7 +131,7 @@ namespace PSW.Service
             return _userRepository.GetUserByUsername(username);
         }
 
-        public bool ShareDrugsFromPharmacy(String name, int quantity)
+        public bool ShareDrugsFromPharmacy(string name, int quantity)
         {
             Task<Medicine> result = ShareDrugs(name, quantity);
             Medicine medicine = result.Result;
@@ -163,13 +164,15 @@ namespace PSW.Service
 
         private static async Task<Medicine> ShareDrugs(string name, int quantity)
         {
-            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
-            var client = new Greeter.GreeterClient(channel);
-            var reply = await client.ShareMedicineAsync(new MedicineRequest { Name = name, Quantity = quantity });
-            Medicine medicine = new Medicine();
-            medicine.Id = reply.Id;
-            medicine.Name = reply.Name;
-            medicine.Dose = reply.Dose;
+            using GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:5001");
+            Greeter.GreeterClient client = new Greeter.GreeterClient(channel);
+            MedicineResponse reply = await client.ShareMedicineAsync(new MedicineRequest { Name = name, Quantity = quantity });
+            Medicine medicine = new Medicine
+            {
+                Id = reply.Id,
+                Name = reply.Name,
+                Dose = reply.Dose
+            };
             return medicine;
         }
     }

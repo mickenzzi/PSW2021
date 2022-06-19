@@ -1,12 +1,11 @@
 using Moq;
+using PSW.DTO;
 using PSW.Model;
 using PSW.Repository.Interface;
 using PSW.Service;
-using System;
-using Xunit;
-using System.Collections.Generic;
 using Shouldly;
-using PSW.DTO;
+using System.Collections.Generic;
+using Xunit;
 
 namespace PSW.UnitTests
 {
@@ -25,15 +24,15 @@ namespace PSW.UnitTests
         [Fact]
         public void Get_by_id()
         {
-            var userId = "1";
-            var userDTO = new User
+            string userId = "1";
+            User userDTO = new User
             {
                 Id = userId
             };
 
             _userRepoMoq.Setup(x => x.GetUserById(userId)).Returns(userDTO);
 
-            var user = _userService.GetUserById(userId);
+            User user = _userService.GetUserById(userId);
 
             Assert.Equal(userId, user.Id);
         }
@@ -41,10 +40,10 @@ namespace PSW.UnitTests
         [Fact]
         public void Get_by_invalid_id()
         {
-            var stubRepository = CreateStubRepository();
-            UserService service = new UserService(stubRepository.Object, _medicineRepoMoq.Object, _termService);
+            Mock<IUserRepository> userRepository = CreateUserRepository();
+            UserService service = new UserService(userRepository.Object, _medicineRepoMoq.Object, _termService);
 
-            var user = _userService.GetUserById("10");
+            User user = _userService.GetUserById("10");
             user.ShouldBe(null);
         }
 
@@ -52,34 +51,25 @@ namespace PSW.UnitTests
         [MemberData(nameof(Data))]
         public void Register_user(User user, bool notRegistered)
         {
-            var stubRepository = CreateStubRepository();
-            UserService service = new UserService(stubRepository.Object, _medicineRepoMoq.Object, _termService);
+            Mock<IUserRepository> userRepository = CreateUserRepository();
+            UserService service = new UserService(userRepository.Object, _medicineRepoMoq.Object, _termService);
 
             bool registered = service.CreateUser(user);
 
             registered.ShouldBe(notRegistered);
         }
 
-        private static Mock<IUserRepository> CreateStubRepository()
-        {
-            var stubRepository = new Mock<IUserRepository>();
-            var users = new List<User>();
-            User pera = CreateUser("1", "pera", "pera123");
-            users.Add(pera);
-
-            stubRepository.Setup(x => x.GetAll()).Returns(users);
-
-            return stubRepository;
-        }
 
         [Fact]
         public void Login_With_Valid_Credentials()
         {
-            var stubRepository = CreateStubRepository();
-            UserService service = new UserService(stubRepository.Object, _medicineRepoMoq.Object, _termService);
-            UserLoginRequestDTO credentials = new UserLoginRequestDTO();
-            credentials.Username = "pera";
-            credentials.Password = "pera123";
+            Mock<IUserRepository> userRepository = CreateUserRepository();
+            UserService service = new UserService(userRepository.Object, _medicineRepoMoq.Object, _termService);
+            UserLoginRequestDTO credentials = new UserLoginRequestDTO
+            {
+                Username = "pera",
+                Password = "pera123"
+            };
 
             User user = service.GetUserByLoginCredentials(credentials);
 
@@ -89,11 +79,13 @@ namespace PSW.UnitTests
         [Fact]
         public void Login_With_Invalid_Credentials()
         {
-            var stubRepository = CreateStubRepository();
-            UserService service = new UserService(stubRepository.Object, _medicineRepoMoq.Object, _termService);
-            UserLoginRequestDTO credentials = new UserLoginRequestDTO();
-            credentials.Username = "pera";
-            credentials.Password = "pera";
+            Mock<IUserRepository> userRepository = CreateUserRepository();
+            UserService service = new UserService(userRepository.Object, _medicineRepoMoq.Object, _termService);
+            UserLoginRequestDTO credentials = new UserLoginRequestDTO
+            {
+                Username = "pera",
+                Password = "pera"
+            };
 
             User user = service.GetUserByLoginCredentials(credentials);
 
@@ -101,30 +93,65 @@ namespace PSW.UnitTests
         }
 
 
+        [Fact]
+        public void Block_User()
+        {
+            Mock<IUserRepository> userRepository = CreateUserRepository();
+            UserService service = new UserService(userRepository.Object, _medicineRepoMoq.Object, _termService);
+            bool result = service.BlockUser("1");
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Unblock_User()
+        {
+            Mock<IUserRepository> userRepository = CreateUserRepository();
+            UserService service = new UserService(userRepository.Object, _medicineRepoMoq.Object, _termService);
+            bool result = service.UnblockUser("1");
+            result.ShouldBeFalse();
+        }
+
+        private static Mock<IUserRepository> CreateUserRepository()
+        {
+            Mock<IUserRepository> userRepository = new Mock<IUserRepository>();
+            List<User> users = new List<User>();
+            User pera = CreateUser("1", "pera", "pera123");
+            users.Add(pera);
+
+            userRepository.Setup(x => x.GetAll()).Returns(users);
+
+            return userRepository;
+        }
+
+
         public static IEnumerable<object[]> Data()
         {
-            var retval = new List<object[]>(); 
-            retval.Add(new object[] { CreateUser("1", "pera", "123"), false });
-            retval.Add(new object[] { CreateUser("2", "mika", "123"), false });
+            List<object[]> retval = new List<object[]>
+            {
+                new object[] { CreateUser("1", "pera", "123"), false },
+                new object[] { CreateUser("2", "mika", "123"), false }
+            };
 
             return retval;
         }
 
         private static User CreateUser(string id, string username, string password)
         {
-            User user = new User();
-            user.Id = id;
-            user.FirstName = "name";
-            user.LastName = "surname";
-            user.Username = username;
-            user.Password = password;
-            user.Role = User.UserRole.Client.ToString();
-            user.DateOfBirth = "birthday";
-            user.Address = "address";
-            user.Country = "country";
-            user.PhoneNumber = "phone";
-            user.Specialization = "none";
-            user.IsBlocked = false;
+            User user = new User
+            {
+                Id = id,
+                FirstName = "name",
+                LastName = "surname",
+                Username = username,
+                Password = password,
+                Role = User.UserRole.Client.ToString(),
+                DateOfBirth = "birthday",
+                Address = "address",
+                Country = "country",
+                PhoneNumber = "phone",
+                Specialization = "none",
+                IsBlocked = false
+            };
 
             return user;
         }

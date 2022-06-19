@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using PSW.Service;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using PSW.Service;
 
 namespace PSW.Helpers
 {
@@ -26,7 +26,7 @@ namespace PSW.Helpers
 
             public async Task Invoke(HttpContext context, UserService userService)
             {
-                var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                string token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
                 if (token != null)
                 {
@@ -40,8 +40,8 @@ namespace PSW.Helpers
             {
                 try
                 {
-                    var tokenHandler = new JwtSecurityTokenHandler();
-                    var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+                    JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+                    byte[] key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
                     tokenHandler.ValidateToken(token, new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -51,8 +51,8 @@ namespace PSW.Helpers
                         ClockSkew = TimeSpan.Zero
                     }, out SecurityToken validatedToken);
 
-                    var jwtToken = (JwtSecurityToken)validatedToken;
-                    var accountId = jwtToken.Claims.First(x => x.Type == "id").Value;
+                    JwtSecurityToken jwtToken = (JwtSecurityToken)validatedToken;
+                    string accountId = jwtToken.Claims.First(x => x.Type == "id").Value;
 
                     context.Items["User"] = _userService.GetUserByUsername(accountId);
                 }

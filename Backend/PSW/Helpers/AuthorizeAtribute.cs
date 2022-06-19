@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using PSW.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PSW.Helpers
 {
@@ -14,9 +11,11 @@ namespace PSW.Helpers
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var account = (UserLoginRequestDTO)context.HttpContext.Items["User"];
+            UserLoginRequestDTO account = (UserLoginRequestDTO)context.HttpContext.Items["User"];
             if (account == null)
+            {
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            }
         }
     }
 }

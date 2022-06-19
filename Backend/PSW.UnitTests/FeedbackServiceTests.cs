@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Moq;
 using PSW.Model;
 using PSW.Repository.Interface;
 using PSW.Service;
-using Xunit;
 using Shouldly;
-using Moq;
+using System.Collections.Generic;
+using Xunit;
 
 namespace PSW.UnitTests
 {
@@ -19,18 +19,18 @@ namespace PSW.UnitTests
         }
 
         [Fact]
-        public void Get_all_feedbacks()
+        public void Get_All_Feedbacks()
         {
-            var stubRepository = CreateStubRepository();
-            FeedbackService service = new FeedbackService(stubRepository.Object);
-            var result = service.GetAllFeedbacks();
+            Mock<IFeedbackRepository> feedbackRepository = CreateFeedbackRepository();
+            FeedbackService service = new FeedbackService(feedbackRepository.Object);
+            List<Feedback> result = service.GetAllFeedbacks();
             result.ShouldNotBe(null);
         }
 
         [Fact]
-        public void Get_feedback_by_id()
+        public void Get_Feedback_By_Id()
         {
-            var feedbackDTO = new Feedback
+            Feedback feedbackDTO = new Feedback
             {
                 Id = "1",
                 Content = "content",
@@ -40,36 +40,58 @@ namespace PSW.UnitTests
                 IsVisible = false
             };
             _feedbackRepoMoq.Setup(x => x.GetFeedbackById("1")).Returns(feedbackDTO);
-            var result = _feedbackService.GetFeedbackById("1");
+            Feedback result = _feedbackService.GetFeedbackById("1");
             Assert.Equal("1", result.Id);
         }
 
         [Fact]
-        public void Get_feedback_by_invalid_id()
+        public void Get_Feedback_By_Invalid_Id()
         {
-            var stubRepository = CreateStubRepository();
-            FeedbackService service = new FeedbackService(stubRepository.Object);
-            var result = service.GetFeedbackById("10");
+            Mock<IFeedbackRepository> feedbackRepository = CreateFeedbackRepository();
+            FeedbackService service = new FeedbackService(feedbackRepository.Object);
+            Feedback result = service.GetFeedbackById("10");
             result.ShouldBe(null);
         }
 
-
-        private static Mock<IFeedbackRepository> CreateStubRepository()
+        [Fact]
+        public void Delete_Feedback()
         {
-            var stubRepository = new Mock<IFeedbackRepository>();
-            var feedbacks = new List<Feedback>();
-            Feedback feedback = new Feedback();
-            feedback.Id = "1";
-            feedback.Content = "content";
-            feedback.Grade = 4;
-            feedback.UserId = "jovan";
-            feedback.IsPrivate = true;
-            feedback.IsVisible = false;
+            Mock<IFeedbackRepository> feedbackRepository = CreateFeedbackRepository();
+            FeedbackService service = new FeedbackService(feedbackRepository.Object);
+            Feedback feedback = new Feedback
+            {
+                Id = "1",
+                Content = "content",
+                Grade = 4,
+                UserId = "jovan",
+                IsPrivate = true,
+                IsVisible = false
+            };
+            service.DeleteFeedback(feedback);
+            Feedback result = service.GetFeedbackById("1");
+            result.ShouldBe(null);
+
+        }
+
+
+        private static Mock<IFeedbackRepository> CreateFeedbackRepository()
+        {
+            Mock<IFeedbackRepository> feedbackRepository = new Mock<IFeedbackRepository>();
+            List<Feedback> feedbacks = new List<Feedback>();
+            Feedback feedback = new Feedback
+            {
+                Id = "1",
+                Content = "content",
+                Grade = 4,
+                UserId = "jovan",
+                IsPrivate = true,
+                IsVisible = false
+            };
             feedbacks.Add(feedback);
 
-            stubRepository.Setup(x => x.GetAll()).Returns(feedbacks);
+            feedbackRepository.Setup(x => x.GetAll()).Returns(feedbacks);
 
-            return stubRepository;
+            return feedbackRepository;
         }
     }
 }

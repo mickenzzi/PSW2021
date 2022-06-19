@@ -1,10 +1,7 @@
 ﻿using PSW.DTO;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PSW.Model
 {
@@ -32,7 +29,7 @@ namespace PSW.Model
 
         [Key]
         [Column("id")]
-        public String Id { get; set; }
+        public string Id { get; set; }
         [Column("firstName")]
         public string FirstName { get; set; }
         [Column("lastName")]
@@ -42,7 +39,7 @@ namespace PSW.Model
         [Column("password")]
         public string Password { get; set; }
         [Column("role")]
-        public String Role { get; set; }
+        public string Role { get; set; }
         [Column("birthday")]
         public string DateOfBirth { get; set; }
         [Column("address")]

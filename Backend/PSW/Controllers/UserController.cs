@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Grpc.Net.Client;
-using IronPdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -63,7 +61,10 @@ namespace PSW.Controllers
         {
             User user = _userService.GetUserById(id);
             if (user == null)
-                return BadRequest(new { message = "Invalid id"});
+            {
+                return BadRequest(new { message = "Invalid id" });
+            }
+
             return Ok(user);
         }
 
@@ -72,8 +73,10 @@ namespace PSW.Controllers
         public IActionResult CreateUser([FromBody] UserRegistrationDTO userDTO)
         {
 
-            User user = new User(userDTO);
-            user.Role = Model.User.UserRole.Client.ToString();
+            User user = new User(userDTO)
+            {
+                Role = Model.User.UserRole.Client.ToString()
+            };
             if (_userService.CreateUser(user))
             {
                 return Ok(new { message = "Success" });
@@ -101,7 +104,7 @@ namespace PSW.Controllers
         [Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult UpdateUser([FromBody] UserDTO userDTO)
         {
-            if(_userService.UpdateUser(userDTO))
+            if (_userService.UpdateUser(userDTO))
             {
                 return Ok(new { message = "Success" });
             }
@@ -140,9 +143,11 @@ namespace PSW.Controllers
             User user = _userService.GetUserByLoginCredentials(data);
 
             if (user == null)
+            {
                 return BadRequest("Please pass the valid username and password");
+            }
 
-            var tokenString = GenerateJwtToken(data.Username);
+            string tokenString = GenerateJwtToken(data.Username);
             return Ok(new { Token = tokenString, LoggedUser = user, Message = "Success" });
 
         }
@@ -150,9 +155,9 @@ namespace PSW.Controllers
 
         private string GenerateJwtToken(string username)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            byte[] key = Encoding.ASCII.GetBytes(_configuration["Jwt:key"]);
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", username) }),
                 Expires = DateTime.UtcNow.AddHours(1),
@@ -160,7 +165,7 @@ namespace PSW.Controllers
                 Audience = _configuration["Jwt:Audience"],
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
     }
