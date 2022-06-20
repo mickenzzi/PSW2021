@@ -69,7 +69,7 @@ namespace PSWIntegrationTests
             HttpClient client = createClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1hamEiLCJuYmYiOjE2NTUzMjI0NTEsImV4cCI6MTY1NTMyNjA1MSwiaWF0IjoxNjU1MzIyNDUxLCJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo0NDM0MSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDIwMCJ9.a24bTPQaUv2htFt9De_kO97xlmJiK5dTHBBXNT5Zw3A");
             DateTime now = DateTime.Now;
-            DateTime start = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0);
+            DateTime start = new DateTime(now.Year, now.Month, now.Day, 10, 0, 0);
             DateTime end = start.AddDays(1);
             TermDTO termDTO = new TermDTO
             {

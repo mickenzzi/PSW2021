@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
@@ -49,7 +50,6 @@ export class RegistrationComponent implements OnInit {
       else {
         this.passwordCheck = false;
         this.inputError = ""
-        console.log(new Date(this.user.DateOfBirth))
         const data = {
           FirstName: this.user.FirstName,
           LastName: this.user.LastName,
@@ -63,6 +63,9 @@ export class RegistrationComponent implements OnInit {
         this.userService.registration(data).subscribe(() => {
           alert('Successfully registration!')
           this.router.navigate(['/'])
+        }, (error: HttpErrorResponse) => {
+          this.passwordCheck = true;
+          this.inputError = "User already exist."
         })
       }
 
