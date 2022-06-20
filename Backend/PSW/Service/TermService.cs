@@ -52,7 +52,7 @@ namespace PSW.Service
             DateTime now = DateTime.Now;
             string html = "<br><h1 style = \"text-align: center;\">Uput doktoru specijalisti</h1><br>" +
                 "<label style = \"font-size: medium;\">Doktor: " + doctorFullName + "</label>" +
-                "<label style = \"margin-left: 40%; font-size: medium; position:fixed\">Datum: " + now.ToString() + "</label><br><br><br>" +
+                "<label style = \"margin-left: 35%; font-size: medium; position:fixed\">Datum: " + now.ToString() + "</label><br><br><br>" +
                 "<label style = \"font-size: large; margin-left: 45%;\">Razlog: </label><br><br><label>Kreiranje zahteva za uput doktoru specijalisti na zahtev pacijenta za datum " + termDate + "." + "</label><br><br><br><br>" +
                 "<label style = \"font-size: medium;\">Pacijent: " + userFullName + "</label>";
             ChromePdfRenderer render = new ChromePdfRenderer();
