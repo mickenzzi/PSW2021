@@ -191,7 +191,7 @@ export class DoctorComponent implements OnInit {
             this.errorMessage = ""
             this.flag3 = true;
             this.flag2 = false;
-            if (this.terms.length === 0) {
+            if (this.terms1.length === 0) {
               this.isFailed = true;
               this.errorMessage = "There is no free terms."
             }
